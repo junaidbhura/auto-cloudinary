@@ -9,7 +9,6 @@ class Core {
 	public $_cloud_name          = '';
 	public $_auto_mapping_folder = '';
 	public $_options             = array();
-	public $_capability          = 'manage_options';
 	public $_urls                = array();
 	private $_url_counter        = 0;
 
@@ -31,9 +30,6 @@ class Core {
 	 * @return void
 	 */
 	public function setup() {
-		add_action( 'admin_menu', array( $this, 'admin_menu_item' ) );
-
-		$this->_capability             = apply_filters( 'cloudinary_user_capability', $this->_capability );
 		$this->_cloud_name             = get_option( 'cloudinary_cloud_name' );
 		$this->_auto_mapping_folder    = get_option( 'cloudinary_auto_mapping_folder' );
 		$this->_options['urls']        = get_option( 'cloudinary_urls' );
@@ -42,47 +38,6 @@ class Core {
 		if ( ! empty( $this->_cloud_name ) && ! empty( $this->_auto_mapping_folder ) ) {
 			$this->_setup = true;
 		}
-	}
-
-	/**
-	 * Add admin menu item.
-	 *
-	 * @return void
-	 */
-	public function admin_menu_item() {
-		add_management_page(
-			__( 'Auto Cloudinary', 'cloudinary' ),
-			__( 'Auto Cloudinary', 'cloudinary' ),
-			$this->_capability,
-			'auto-cloudinary',
-			array( $this, 'options_page' )
-		);
-	}
-
-	/**
-	 * Options page.
-	 *
-	 * @return void
-	 */
-	public function options_page() {
-		// Check for POST.
-		if (
-			isset( $_POST['cloudinary_nonce'] ) // Input var okay.
-			&& wp_verify_nonce( sanitize_key( $_POST['cloudinary_nonce'] ), 'cloudinary_options' ) // Input var okay.
-		) {
-			update_option( 'cloudinary_cloud_name', sanitize_text_field( $_POST['cloudinary_cloud_name'] ) );
-			update_option( 'cloudinary_auto_mapping_folder', sanitize_text_field( $_POST['cloudinary_auto_mapping_folder'] ) );
-			$urls = trim( sanitize_textarea_field( $_POST['cloudinary_urls'] ) );
-			if ( empty( $urls ) ) {
-				$urls = 'https://res.cloudinary.com';
-			}
-			update_option( 'cloudinary_urls', $urls );
-
-			echo '<div class="updated"><p>' . esc_html__( 'Options saved.', 'fly-images' ) . '</p></div>';
-		}
-
-		// Load template.
-		load_template( JB_CLOUDINARY_PATH . '/admin/options.php' );
 	}
 
 	/**
@@ -147,6 +102,7 @@ class Core {
 	 * @return string
 	 */
 	public function get_domain() {
+		// Get our URLs the first time this function is called.
 		if ( empty( $this->_urls ) ) {
 			if ( ! empty( $this->_options['urls'] ) ) {
 				$this->_urls = array_map( function( $url ) {
@@ -154,17 +110,20 @@ class Core {
 				}, array_map( 'trim', explode( "\n", $this->_options['urls'] ) ) );
 			}
 
+			// Something went wrong, fallback to default URL.
 			if ( empty( $this->_urls ) ) {
 				$this->_urls[] = 'https://res.cloudinary.com';
 			}
 		}
 
+		// Cycle through domains and get the current one.
 		$total_urls = count( $this->_urls );
 		$this->_url_counter ++;
 		if ( $this->_url_counter > $total_urls ) {
 			$this->_url_counter = 1;
 		}
 
+		// Return current domain.
 		return $this->_urls[ $this->_url_counter - 1 ];
 	}
 
