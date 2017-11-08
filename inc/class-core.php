@@ -9,6 +9,7 @@ class Core {
 	public $_cloud_name          = '';
 	public $_auto_mapping_folder = '';
 	public $_options             = array();
+	public $_capability          = 'manage_options';
 	private $_domain_counter     = 0;
 
 	/**
@@ -29,16 +30,55 @@ class Core {
 	 * @return void
 	 */
 	public function setup() {
-		if ( defined( 'CLOUDINARY_CLOUD_NAME' ) && defined( 'CLOUDINARY_AUTO_MAPPING_FOLDER' ) ) {
-			$this->_setup               = true;
-			$this->_cloud_name          = CLOUDINARY_CLOUD_NAME;
-			$this->_auto_mapping_folder = CLOUDINARY_AUTO_MAPPING_FOLDER;
+		add_action( 'admin_menu', array( $this, 'admin_menu_item' ) );
+
+		$this->_capability               = apply_filters( 'cloudinary_user_capability', $this->_capability );
+		$this->_cloud_name               = get_option( 'cloudinary_cloud_name' );
+		$this->_auto_mapping_folder      = get_option( 'cloudinary_auto_mapping_folder' );
+		$this->_options['total_domains'] = intval( get_option( 'cloudinary_total_domains' ) );
+		$this->_options['content_url']   = apply_filters( 'cloudinary_content_url', content_url() );
+
+		if ( ! empty( $this->_cloud_name ) && ! empty( $this->_auto_mapping_folder ) ) {
+			$this->_setup = true;
+		}
+	}
+
+	/**
+	 * Add admin menu item.
+	 *
+	 * @return void
+	 */
+	public function admin_menu_item() {
+		add_management_page(
+			__( 'Auto Cloudinary', 'cloudinary' ),
+			__( 'Auto Cloudinary', 'cloudinary' ),
+			$this->_capability,
+			'auto-cloudinary',
+			array( $this, 'options_page' )
+		);
+	}
+
+	/**
+	 * Options page.
+	 *
+	 * @return void
+	 */
+	public function options_page() {
+		// Check for POST.
+		if (
+			isset( $_POST['cloudinary_nonce'] ) // Input var okay.
+			&& wp_verify_nonce( sanitize_key( $_POST['cloudinary_nonce'] ), 'cloudinary_options' ) // Input var okay.
+		) {
+			update_option( 'cloudinary_cloud_name', sanitize_text_field( $_POST['cloudinary_cloud_name'] ) );
+			update_option( 'cloudinary_auto_mapping_folder', sanitize_text_field( $_POST['cloudinary_auto_mapping_folder'] ) );
+			$total_domains = intval( sanitize_text_field( $_POST['cloudinary_total_domains'] ) );
+			update_option( 'cloudinary_total_domains', $total_domains < 1 ? 1 : $total_domains );
+
+			echo '<div class="updated"><p>' . esc_html__( 'Options saved.', 'fly-images' ) . '</p></div>';
 		}
 
-		$this->_options = apply_filters( 'cloudinary_options', array(
-			'total_domains' => 1,
-			'content_url'   => content_url(),
-		) );
+		// Load template.
+		load_template( JB_CLOUDINARY_PATH . '/admin/options.php' );
 	}
 
 	/**

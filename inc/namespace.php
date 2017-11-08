@@ -3,7 +3,7 @@
 namespace JB\Cloudinary;
 
 spl_autoload_register( __NAMESPACE__ . '\\autoload' );
-add_action( 'template_redirect', __NAMESPACE__ . '\\bootstrap' );
+add_action( 'init', __NAMESPACE__ . '\\bootstrap' );
 
 /**
  * Autoloader.
