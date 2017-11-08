@@ -43,7 +43,26 @@ function autoload( $class = '' ) {
  * @return void
  */
 function bootstrap() {
+	// First, set up core.
 	Core::get_instance()->setup();
+
+	// Check if we need to replace content images.
+	if ( '1' === get_option( 'cloudinary_content_images' ) && apply_filters( 'cloudinary_content_images', true ) ) {
+		add_filter( 'the_content', 'cloudinary_update_content_images', 999 );
+		add_filter( 'wp_get_attachment_url', 'cloudinary_url', 999, 1 );
+		add_filter( 'wp_get_attachment_image_src', function( $image ) {
+			$image[0] = cloudinary_url( $image[0] );
+			return $image;
+		}, 999, 1 );
+		add_filter( 'wp_calculate_image_srcset', function( $sources ) {
+			if ( ! empty( $sources ) ) {
+				foreach ( $sources as $key => $source ) {
+					$sources[ $key ]['url'] = cloudinary_url( $sources[ $key ]['url'] );
+				}
+			}
+			return $sources;
+		}, 999, 1 );
+	}
 }
 
 /**
@@ -79,6 +98,12 @@ function options_page() {
 			$urls = 'https://res.cloudinary.com';
 		}
 		update_option( 'cloudinary_urls', $urls );
+		if ( empty( $_POST['cloudinary_content_images'] ) ) {
+			$content_images = '';
+		} else {
+			$content_images = sanitize_text_field( $_POST['cloudinary_content_images'] );
+		}
+		update_option( 'cloudinary_content_images', $content_images );
 
 		echo '<div class="updated"><p>' . esc_html__( 'Options saved.', 'fly-images' ) . '</p></div>';
 	}

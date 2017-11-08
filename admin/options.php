@@ -1,9 +1,8 @@
 <div class="wrap">
 
-	<h2>Auto Cloudinary</h2>
+	<h2><?php esc_html_e( 'Auto Cloudinary Options', 'cloudinary' ); ?></h2>
 
 	<div class="card">
-		<h3><?php esc_html_e( 'Options', 'cloudinary' ); ?></h3>
 		<form method="post" action="">
 			<table class="form-table">
 				<tbody>
@@ -24,6 +23,16 @@
 						<td>
 							<textarea name="cloudinary_urls" id="cloudinary_urls" class="large-text" style="height: 100px;"><?php echo ! empty( get_option( 'cloudinary_urls' ) ) ? esc_html( get_option( 'cloudinary_urls' ) ) : 'https://res.cloudinary.com'; ?></textarea>
 							<p class="description"><?php esc_html_e( 'Add one per line.', 'cloudinary' ); ?></p>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><label for="cloudinary_content_images"><?php esc_html_e( 'Content Images', 'cloudinary' ); ?></label></th>
+						<td>
+							<input name="cloudinary_content_images" id="cloudinary_content_images" type="checkbox" value="1"
+								<?php if ( '1' === get_option( 'cloudinary_content_images' ) ) : ?>
+									checked="checked"
+								<?php endif; ?>>
+							<p class="description"><?php esc_html_e( 'Automatically use Cloudinary for all images?', 'cloudinary' ); ?></p>
 						</td>
 					</tr>
 				</tbody>
