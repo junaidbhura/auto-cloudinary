@@ -20,13 +20,10 @@
 						</td>
 					</tr>
 					<tr>
-						<th scope="row"><label for="cloudinary_total_domains"><?php esc_html_e( 'Number of Domains', 'cloudinary' ); ?></label></th>
+						<th scope="row"><label for="cloudinary_urls"><?php esc_html_e( 'URLs', 'cloudinary' ); ?></label></th>
 						<td>
-							<input name="cloudinary_total_domains" id="cloudinary_total_domains" value="<?php
-							$total_domains = get_option( 'cloudinary_total_domains' );
-							echo empty( $total_domains ) ? 1 : esc_html( $total_domains );
-							?>" class="regular-text" type="text">
-							<p class="description"><?php esc_html_e( "Enter the total number of domains you'd like to use.", 'cloudinary' ); ?></p>
+							<textarea name="cloudinary_urls" id="cloudinary_urls" class="large-text" style="height: 100px;"><?php echo ! empty( get_option( 'cloudinary_urls' ) ) ? esc_html( get_option( 'cloudinary_urls' ) ) : 'https://res.cloudinary.com'; ?></textarea>
+							<p class="description"><?php esc_html_e( 'Add one per line.', 'cloudinary' ); ?></p>
 						</td>
 					</tr>
 				</tbody>

@@ -10,7 +10,8 @@ class Core {
 	public $_auto_mapping_folder = '';
 	public $_options             = array();
 	public $_capability          = 'manage_options';
-	private $_domain_counter     = 0;
+	public $_urls                = array();
+	private $_url_counter        = 0;
 
 	/**
 	 * Get current instance.
@@ -32,11 +33,11 @@ class Core {
 	public function setup() {
 		add_action( 'admin_menu', array( $this, 'admin_menu_item' ) );
 
-		$this->_capability               = apply_filters( 'cloudinary_user_capability', $this->_capability );
-		$this->_cloud_name               = get_option( 'cloudinary_cloud_name' );
-		$this->_auto_mapping_folder      = get_option( 'cloudinary_auto_mapping_folder' );
-		$this->_options['total_domains'] = intval( get_option( 'cloudinary_total_domains' ) );
-		$this->_options['content_url']   = apply_filters( 'cloudinary_content_url', content_url() );
+		$this->_capability             = apply_filters( 'cloudinary_user_capability', $this->_capability );
+		$this->_cloud_name             = get_option( 'cloudinary_cloud_name' );
+		$this->_auto_mapping_folder    = get_option( 'cloudinary_auto_mapping_folder' );
+		$this->_options['urls']        = get_option( 'cloudinary_urls' );
+		$this->_options['content_url'] = apply_filters( 'cloudinary_content_url', content_url() );
 
 		if ( ! empty( $this->_cloud_name ) && ! empty( $this->_auto_mapping_folder ) ) {
 			$this->_setup = true;
@@ -71,8 +72,11 @@ class Core {
 		) {
 			update_option( 'cloudinary_cloud_name', sanitize_text_field( $_POST['cloudinary_cloud_name'] ) );
 			update_option( 'cloudinary_auto_mapping_folder', sanitize_text_field( $_POST['cloudinary_auto_mapping_folder'] ) );
-			$total_domains = intval( sanitize_text_field( $_POST['cloudinary_total_domains'] ) );
-			update_option( 'cloudinary_total_domains', $total_domains < 1 ? 1 : $total_domains );
+			$urls = trim( sanitize_textarea_field( $_POST['cloudinary_urls'] ) );
+			if ( empty( $urls ) ) {
+				$urls = 'https://res.cloudinary.com';
+			}
+			update_option( 'cloudinary_urls', $urls );
 
 			echo '<div class="updated"><p>' . esc_html__( 'Options saved.', 'fly-images' ) . '</p></div>';
 		}
@@ -143,16 +147,25 @@ class Core {
 	 * @return string
 	 */
 	public function get_domain() {
-		if ( 1 === $this->_options['total_domains'] ) {
-			return 'https://res.cloudinary.com';
+		if ( empty( $this->_urls ) ) {
+			if ( ! empty( $this->_options['urls'] ) ) {
+				$this->_urls = array_map( function( $url ) {
+					return rtrim( $url, '/' );
+				}, array_map( 'trim', explode( "\n", $this->_options['urls'] ) ) );
+			}
+
+			if ( empty( $this->_urls ) ) {
+				$this->_urls[] = 'https://res.cloudinary.com';
+			}
 		}
 
-		$this->_domain_counter ++;
-		if ( $this->_domain_counter > $this->_options['total_domains'] ) {
-			$this->_domain_counter = 1;
+		$total_urls = count( $this->_urls );
+		$this->_url_counter ++;
+		if ( $this->_url_counter > $total_urls ) {
+			$this->_url_counter = 1;
 		}
 
-		return "https://res-$this->_domain_counter.cloudinary.com";
+		return $this->_urls[ $this->_url_counter - 1 ];
 	}
 
 }
