@@ -109,7 +109,7 @@ function options_page() {
  * @return string
  */
 function filter_wp_get_attachment_url( $url ) {
-	if ( ! apply_filters( 'cloudinary_ignore_url', false ) ) {
+	if ( ! apply_filters( 'cloudinary_ignore', false ) ) {
 		return cloudinary_url( $url );
 	}
 	return $url;
@@ -122,7 +122,7 @@ function filter_wp_get_attachment_url( $url ) {
  * @return array
  */
 function filter_wp_get_attachment_image_src( $image ) {
-	if ( ! apply_filters( 'cloudinary_ignore_url', false ) ) {
+	if ( ! apply_filters( 'cloudinary_ignore', false ) ) {
 		$image[0] = cloudinary_url( $image[0] );
 	}
 	return $image;
@@ -135,7 +135,7 @@ function filter_wp_get_attachment_image_src( $image ) {
  * @return array
  */
 function filter_wp_calculate_image_srcset( $sources ) {
-	if ( ! apply_filters( 'cloudinary_ignore_url', false ) ) {
+	if ( ! apply_filters( 'cloudinary_ignore', false ) ) {
 		if ( ! empty( $sources ) ) {
 			foreach ( $sources as $key => $source ) {
 				$sources[ $key ]['url'] = cloudinary_url( $sources[ $key ]['url'] );

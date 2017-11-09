@@ -14,6 +14,9 @@ class JB_Test_Cloudinary_Plugin extends WP_UnitTestCase {
 	static function setUpBeforeClass() {
 		self::$_upload_dir = wp_upload_dir();
 		self::$_image_id   = self::upload_image();
+
+		update_option( 'cloudinary_content_images', '1' );
+		JB\Cloudinary\bootstrap();
 	}
 
 	/**
@@ -60,7 +63,6 @@ class JB_Test_Cloudinary_Plugin extends WP_UnitTestCase {
 
 		update_option( 'cloudinary_cloud_name', 'test-cloud' );
 		update_option( 'cloudinary_auto_mapping_folder', 'test-auto-folder' );
-		update_option( 'cloudinary_content_images', '1' );
 		$cloudinary->setup();
 
 		$this->assertTrue( $cloudinary->_setup, 'Cloudinary not setup.' );
@@ -90,6 +92,7 @@ class JB_Test_Cloudinary_Plugin extends WP_UnitTestCase {
 	 * @covers \JB\Cloudinary\Core::get_url()
 	 */
 	function test_get_url() {
+		cloudinary_ignore_start();
 		$file               = get_attached_file( self::$_image_id );
 		$file_info          = pathinfo( $file );
 		$test_file_name     = 'test-file-name';
@@ -110,6 +113,7 @@ class JB_Test_Cloudinary_Plugin extends WP_UnitTestCase {
 			'file_name' => $test_file_name,
 		);
 		$options_3          = array_merge( $options, $options_2 );
+		cloudinary_ignore_end();
 
 		$this->assertEquals( cloudinary_url( self::$_image_id ), 'https://res-2.cloudinary.com/test-cloud/test-auto-folder' . $image_path, 'Incorrect URL.' );
 		$this->assertEquals( cloudinary_url( $original_image_url ), 'https://res-3.cloudinary.com/test-cloud/test-auto-folder' . $image_path, 'Incorrect URL.' );
@@ -128,7 +132,9 @@ class JB_Test_Cloudinary_Plugin extends WP_UnitTestCase {
 	 * @covers cloudinary_update_content_images()
 	 */
 	function test_update_content_images() {
+		cloudinary_ignore_start();
 		$content = 'Test content. ' . get_image_tag( self::$_image_id, '', '', 'none', 'full' );
+		cloudinary_ignore_end();
 		$updated_content = str_replace( self::$_upload_dir['baseurl'], 'https://res-1.cloudinary.com/test-cloud/test-auto-folder/uploads', $content );
 		$this->assertEquals( cloudinary_update_content_images( $content ), $updated_content, 'Content image incorrect.' );
 	}

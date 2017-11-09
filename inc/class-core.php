@@ -50,9 +50,9 @@ class Core {
 	public function get_url( $identifier = 0, $args = array() ) {
 		if ( is_numeric( $identifier ) ) {
 			// Identifier is numeric, let's assume it's an ID and get the original URL.
-			cloudinary_ignore_url_start();
+			cloudinary_ignore_start();
 			$original_url = wp_get_attachment_url( intval( $identifier ) );
-			cloudinary_ignore_url_end();
+			cloudinary_ignore_end();
 		} elseif ( is_string( $identifier ) ) {
 			// Identifier is a string, let's assume it's the original URL.
 			$original_url = $identifier;

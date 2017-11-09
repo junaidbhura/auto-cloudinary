@@ -57,24 +57,24 @@ if ( ! function_exists( 'cloudinary_update_content_images' ) ) {
 	}
 }
 
-if ( ! function_exists( 'cloudinary_ignore_url_start' ) ) {
+if ( ! function_exists( 'cloudinary_ignore_start' ) ) {
 	/**
 	 * Helper function to add a filter.
 	 *
 	 * @return void
 	 */
-	function cloudinary_ignore_url_start() {
-		add_filter( 'cloudinary_ignore_url', '__return_true', 10 );
+	function cloudinary_ignore_start() {
+		add_filter( 'cloudinary_ignore', '__return_true', 10 );
 	}
 }
 
-if ( ! function_exists( 'cloudinary_ignore_url_end' ) ) {
+if ( ! function_exists( 'cloudinary_ignore_end' ) ) {
 	/**
 	 * Helper function to remove a filter.
 	 *
 	 * @return void
 	 */
-	function cloudinary_ignore_url_end() {
-		remove_filter( 'cloudinary_ignore_url', '__return_true', 10 );
+	function cloudinary_ignore_end() {
+		remove_filter( 'cloudinary_ignore', '__return_true', 10 );
 	}
 }
