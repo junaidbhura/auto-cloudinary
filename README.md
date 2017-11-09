@@ -32,7 +32,7 @@ Returns a URL (string):
 
 **Arguments**
 
-Here are some sample arguments that you can use:
+Here are some sample arguments you can use:
 
 ```php
 array(
@@ -47,6 +47,35 @@ array(
 );
 ```
 
+Here's a [full list of transformations](https://cloudinary.com/documentation/image_transformations) you can achieve with Cloudinary.
+
+#### Examples:
+
+```php
+<?php
+$url_1 = cloudinary_url( 123, array(
+	'transform' => array(
+		'width'   => 300,
+		'height'  => 200,
+		'crop'    => 'fill',
+		'quality' => '80',
+		'gravity' => 'face',
+	),
+	'file_name' => 'dynamic-file-name',
+) );
+
+$url_2 = cloudinary_url( 'https://www.yourwebsite.com/wp-content/uploads/2017/12/my-image.jpg', array(
+	'transform' => array(
+		'width'   => 100,
+		'height'  => 100,
+	),
+) );
+?>
+
+<img src="<?php echo esc_url( $url_1 ); ?>" width="300" height="200" alt="">
+<img src="<?php echo esc_url( $url_2 ); ?>" width="100" height="100" alt="">
+```
+
 ## Documentation
 
-The wiki contains all the documentation for this plugin: [Documentation](https://github.com/junaidbhura/auto-cloudinary/wiki)
+The Wiki contains all the documentation for this plugin: [Documentation](https://github.com/junaidbhura/auto-cloudinary/wiki)
