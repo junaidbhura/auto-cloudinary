@@ -49,19 +49,9 @@ function bootstrap() {
 	// Check if we need to replace content images.
 	if ( '1' === get_option( 'cloudinary_content_images' ) && apply_filters( 'cloudinary_content_images', true ) ) {
 		add_filter( 'the_content', 'cloudinary_update_content_images', 999 );
-		add_filter( 'wp_get_attachment_url', 'cloudinary_url', 999, 1 );
-		add_filter( 'wp_get_attachment_image_src', function( $image ) {
-			$image[0] = cloudinary_url( $image[0] );
-			return $image;
-		}, 999, 1 );
-		add_filter( 'wp_calculate_image_srcset', function( $sources ) {
-			if ( ! empty( $sources ) ) {
-				foreach ( $sources as $key => $source ) {
-					$sources[ $key ]['url'] = cloudinary_url( $sources[ $key ]['url'] );
-				}
-			}
-			return $sources;
-		}, 999, 1 );
+		add_filter( 'wp_get_attachment_url', 'cloudinary_url', 999 );
+		add_filter( 'wp_get_attachment_image_src', __NAMESPACE__ . '\\filter_wp_get_attachment_image_src', 999 );
+		add_filter( 'wp_calculate_image_srcset', __NAMESPACE__ . '\\filter_wp_calculate_image_srcset', 999 );
 	}
 }
 
@@ -72,8 +62,8 @@ function bootstrap() {
  */
 function admin_menu_item() {
 	add_management_page(
-		__( 'Auto Cloudinary', 'cloudinary' ),
-		__( 'Auto Cloudinary', 'cloudinary' ),
+		__( 'Cloudinary', 'cloudinary' ),
+		__( 'Cloudinary', 'cloudinary' ),
 		apply_filters( 'cloudinary_user_capability', 'manage_options' ),
 		'auto-cloudinary',
 		__NAMESPACE__ . '\\options_page'
@@ -110,4 +100,30 @@ function options_page() {
 
 	// Load template.
 	load_template( JB_CLOUDINARY_PATH . '/admin/options.php' );
+}
+
+/**
+ * Filter wp_get_attachment_image_src to use Cloudinary.
+ *
+ * @param  array $image
+ * @return array
+ */
+function filter_wp_get_attachment_image_src( $image ) {
+	$image[0] = cloudinary_url( $image[0] );
+	return $image;
+}
+
+/**
+ * Filter wp_calculate_image_srcset to use Cloudinary.
+ *
+ * @param  array $sources
+ * @return array
+ */
+function filter_wp_calculate_image_srcset( $sources ) {
+	if ( ! empty( $sources ) ) {
+		foreach ( $sources as $key => $source ) {
+			$sources[ $key ]['url'] = cloudinary_url( $sources[ $key ]['url'] );
+		}
+	}
+	return $sources;
 }
