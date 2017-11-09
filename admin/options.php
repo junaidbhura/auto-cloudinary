@@ -1,6 +1,6 @@
 <div class="wrap">
 
-	<h2><?php esc_html_e( 'Auto Cloudinary Options', 'cloudinary' ); ?></h2>
+	<h2><?php esc_html_e( 'Cloudinary Options', 'cloudinary' ); ?></h2>
 
 	<div class="card">
 		<form method="post" action="">
