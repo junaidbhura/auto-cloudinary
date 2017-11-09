@@ -78,11 +78,10 @@ class Core {
 
 		// Transformations.
 		if ( ! empty( $args['transform'] ) ) {
-			$img_options = array();
-			foreach ( $args['transform'] as $key => $value ) {
-				$img_options[] = $key[0] . '_' . $value;
+			$transformations_slug = $this->build_transformation_slug( $args['transform'] );
+			if ( ! empty( $transformations_slug ) ) {
+				$url .= '/' . $transformations_slug;
 			}
-			$url .= '/' . implode( ',', $img_options );
 		}
 
 		// Finish building the URL.
@@ -130,6 +129,65 @@ class Core {
 
 		// Return current domain.
 		return $this->_urls[ $this->_url_counter - 1 ];
+	}
+
+	/**
+	 * Build a Cloudinary transformation slug from arguments.
+	 *
+	 * @param  array $args
+	 * @return string
+	 */
+	public function build_transformation_slug( $args = array() ) {
+		if ( empty( $args ) ) {
+			return '';
+		}
+
+		$cloudinary_params = array(
+			'angle'                => 'a',
+			'aspect_ratio'         => 'ar',
+			'background'           => 'b',
+			'border'               => 'bo',
+			'crop'                 => 'c',
+			'color'                => 'co',
+			'dpr'                  => 'dpr',
+			'duration'             => 'du',
+			'effect'               => 'e',
+			'end_offset'           => 'eo',
+			'flags'                => 'fl',
+			'height'               => 'h',
+			'overlay'              => 'l',
+			'opacity'              => 'o',
+			'quality'              => 'q',
+			'radius'               => 'r',
+			'start_offset'         => 'so',
+			'named_transformation' => 't',
+			'underlay'             => 'u',
+			'video_codec'          => 'vc',
+			'width'                => 'w',
+			'x'                    => 'x',
+			'y'                    => 'y',
+			'zoom'                 => 'z',
+			'audio_codec'          => 'ac',
+			'audio_frequency'      => 'af',
+			'bit_rate'             => 'br',
+			'color_space'          => 'cs',
+			'default_image'        => 'd',
+			'delay'                => 'dl',
+			'density'              => 'dn',
+			'fetch_format'         => 'f',
+			'gravity'              => 'g',
+			'prefix'               => 'p',
+			'page'                 => 'pg',
+			'video_sampling'       => 'vs',
+		);
+
+		$slug = array();
+		foreach ( $args as $key => $value ) {
+			if ( array_key_exists( $key, $cloudinary_params ) ) {
+				$slug[] = $cloudinary_params[ $key ] . '_' . $value;
+			}
+		}
+		return implode( ',', $slug );
 	}
 
 }
