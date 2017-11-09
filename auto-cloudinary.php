@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Auto Cloudinary
-Description: Super simple Cloudinary auto-pull implementation for WordPress.
+Description: Super simple Cloudinary auto-upload implementation for WordPress.
 Version: 1.0.0
 Author: Junaid Bhura
 Author URI: https://junaidbhura.com
