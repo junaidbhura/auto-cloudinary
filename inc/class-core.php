@@ -32,7 +32,7 @@ class Core {
 	public function setup() {
 		$this->_cloud_name             = apply_filters( 'cloudinary_cloud_name', get_option( 'cloudinary_cloud_name' ) );
 		$this->_auto_mapping_folder    = apply_filters( 'cloudinary_auto_mapping_folder', get_option( 'cloudinary_auto_mapping_folder' ) );
-		$this->_options['urls']        = apply_filters( 'cloudinary_urls', get_option( 'cloudinary_urls' ) );
+		$this->_options['urls']        = get_option( 'cloudinary_urls' );
 		$this->_options['content_url'] = apply_filters( 'cloudinary_content_url', content_url() );
 
 		if ( ! empty( $this->_cloud_name ) && ! empty( $this->_auto_mapping_folder ) ) {
@@ -109,6 +109,9 @@ class Core {
 					return rtrim( $url, '/' );
 				}, array_map( 'trim', explode( "\n", $this->_options['urls'] ) ) );
 			}
+
+			$this->_urls = apply_filters( 'cloudinary_urls', $this->_urls );
+			$this->_url_counter = 0;
 
 			// Something went wrong, fallback to default URL.
 			if ( empty( $this->_urls ) ) {
