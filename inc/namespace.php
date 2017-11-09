@@ -46,8 +46,8 @@ function bootstrap() {
 	// First, set up core.
 	Core::get_instance()->setup();
 
-	// Check if we need to replace content images.
-	if ( '1' === get_option( 'cloudinary_content_images' ) && apply_filters( 'cloudinary_content_images', true ) ) {
+	// Check if we need to replace content images on the front-end.
+	if ( ! is_admin() && '1' === get_option( 'cloudinary_content_images' ) && apply_filters( 'cloudinary_content_images', true ) ) {
 		add_filter( 'the_content', 'cloudinary_update_content_images', 999 );
 		add_filter( 'wp_get_attachment_url', 'cloudinary_url', 999 );
 		add_filter( 'wp_get_attachment_image_src', __NAMESPACE__ . '\\filter_wp_get_attachment_image_src', 999 );
