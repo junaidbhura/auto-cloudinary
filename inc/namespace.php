@@ -49,7 +49,7 @@ function bootstrap() {
 	// Check if we need to replace content images on the front-end.
 	if ( ! is_admin() && '1' === get_option( 'cloudinary_content_images' ) && apply_filters( 'cloudinary_content_images', true ) ) {
 		add_filter( 'the_content', 'cloudinary_update_content_images', 999 );
-		add_filter( 'wp_get_attachment_url', 'cloudinary_url', 999 );
+		add_filter( 'wp_get_attachment_url', __NAMESPACE__ . '\\filter_wp_get_attachment_url', 999 );
 		add_filter( 'wp_get_attachment_image_src', __NAMESPACE__ . '\\filter_wp_get_attachment_image_src', 999 );
 		add_filter( 'wp_calculate_image_srcset', __NAMESPACE__ . '\\filter_wp_calculate_image_srcset', 999 );
 	}
@@ -103,13 +103,28 @@ function options_page() {
 }
 
 /**
+ * Filter wp_get_attachment_url to use Cloudinary.
+ *
+ * @param  string $url
+ * @return string
+ */
+function filter_wp_get_attachment_url( $url ) {
+	if ( ! apply_filters( 'cloudinary_ignore_url', false ) ) {
+		return cloudinary_url( $url );
+	}
+	return $url;
+}
+
+/**
  * Filter wp_get_attachment_image_src to use Cloudinary.
  *
  * @param  array $image
  * @return array
  */
 function filter_wp_get_attachment_image_src( $image ) {
-	$image[0] = cloudinary_url( $image[0] );
+	if ( ! apply_filters( 'cloudinary_ignore_url', false ) ) {
+		$image[0] = cloudinary_url( $image[0] );
+	}
 	return $image;
 }
 
@@ -120,9 +135,11 @@ function filter_wp_get_attachment_image_src( $image ) {
  * @return array
  */
 function filter_wp_calculate_image_srcset( $sources ) {
-	if ( ! empty( $sources ) ) {
-		foreach ( $sources as $key => $source ) {
-			$sources[ $key ]['url'] = cloudinary_url( $sources[ $key ]['url'] );
+	if ( ! apply_filters( 'cloudinary_ignore_url', false ) ) {
+		if ( ! empty( $sources ) ) {
+			foreach ( $sources as $key => $source ) {
+				$sources[ $key ]['url'] = cloudinary_url( $sources[ $key ]['url'] );
+			}
 		}
 	}
 	return $sources;
