@@ -63,9 +63,6 @@ function bootstrap() {
 	if ( apply_filters( 'cloudinary_wp_get_attachment_url', $replace_content ) ) {
 		add_filter( 'wp_get_attachment_url', __NAMESPACE__ . '\\filter_wp_get_attachment_url', 999 );
 	}
-	if ( apply_filters( 'cloudinary_wp_get_attachment_image_src', $replace_content ) ) {
-		add_filter( 'wp_get_attachment_image_src', __NAMESPACE__ . '\\filter_wp_get_attachment_image_src', 999 );
-	}
 	if ( apply_filters( 'cloudinary_wp_calculate_image_srcset', $replace_content ) ) {
 		add_filter( 'wp_calculate_image_srcset', __NAMESPACE__ . '\\filter_wp_calculate_image_srcset', 999 );
 	}
@@ -129,19 +126,6 @@ function filter_wp_get_attachment_url( $url ) {
 		return cloudinary_url( $url );
 	}
 	return $url;
-}
-
-/**
- * Filter wp_get_attachment_image_src to use Cloudinary.
- *
- * @param  array $image
- * @return array
- */
-function filter_wp_get_attachment_image_src( $image ) {
-	if ( ! apply_filters( 'cloudinary_ignore', false ) ) {
-		$image[0] = cloudinary_url( $image[0] );
-	}
-	return $image;
 }
 
 /**

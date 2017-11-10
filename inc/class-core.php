@@ -33,7 +33,8 @@ class Core {
 		$this->_cloud_name             = apply_filters( 'cloudinary_cloud_name', get_option( 'cloudinary_cloud_name' ) );
 		$this->_auto_mapping_folder    = apply_filters( 'cloudinary_auto_mapping_folder', get_option( 'cloudinary_auto_mapping_folder' ) );
 		$this->_options['urls']        = get_option( 'cloudinary_urls' );
-		$this->_options['content_url'] = apply_filters( 'cloudinary_content_url', content_url() );
+		$upload_dir                    = wp_upload_dir();
+		$this->_options['upload_url']  = apply_filters( 'cloudinary_upload_url', $upload_dir['baseurl'] );
 
 		if ( ! empty( $this->_cloud_name ) && ! empty( $this->_auto_mapping_folder ) ) {
 			$this->_setup = true;
@@ -85,7 +86,7 @@ class Core {
 		}
 
 		// Finish building the URL.
-		$url .= '/' . $this->_auto_mapping_folder . str_replace( $this->_options['content_url'], '', $original_url );
+		$url .= '/' . $this->_auto_mapping_folder . str_replace( $this->_options['upload_url'], '', $original_url );
 
 		// Modify last bit of the URL if file name is present.
 		if ( ! empty( $args['file_name'] ) ) {
