@@ -43,14 +43,30 @@ function autoload( $class = '' ) {
  * @return void
  */
 function bootstrap() {
+	// Don't care about WP admin.
+	if ( is_admin() ) {
+		return;
+	}
+
 	// First, set up core.
 	Core::get_instance()->setup();
 
 	// Check if we need to replace content images on the front-end.
-	if ( ! is_admin() && '1' === get_option( 'cloudinary_content_images' ) && apply_filters( 'cloudinary_content_images', true ) ) {
+	$replace_content = false;
+	if ( '1' === get_option( 'cloudinary_content_images' ) && apply_filters( 'cloudinary_content_images', true ) ) {
+		$replace_content = true;
+	}
+
+	if ( apply_filters( 'cloudinary_the_content', $replace_content ) ) {
 		add_filter( 'the_content', 'cloudinary_update_content_images', 999 );
+	}
+	if ( apply_filters( 'cloudinary_wp_get_attachment_url', $replace_content ) ) {
 		add_filter( 'wp_get_attachment_url', __NAMESPACE__ . '\\filter_wp_get_attachment_url', 999 );
+	}
+	if ( apply_filters( 'cloudinary_wp_get_attachment_image_src', $replace_content ) ) {
 		add_filter( 'wp_get_attachment_image_src', __NAMESPACE__ . '\\filter_wp_get_attachment_image_src', 999 );
+	}
+	if ( apply_filters( 'cloudinary_wp_calculate_image_srcset', $replace_content ) ) {
 		add_filter( 'wp_calculate_image_srcset', __NAMESPACE__ . '\\filter_wp_calculate_image_srcset', 999 );
 	}
 }
