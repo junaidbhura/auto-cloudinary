@@ -57,13 +57,13 @@ function bootstrap() {
 		$replace_content = true;
 	}
 
-	if ( apply_filters( 'cloudinary_the_content', $replace_content ) ) {
+	if ( apply_filters( 'cloudinary_filter_the_content', $replace_content ) ) {
 		add_filter( 'the_content', 'cloudinary_update_content_images', 999 );
 	}
-	if ( apply_filters( 'cloudinary_wp_get_attachment_url', $replace_content ) ) {
+	if ( apply_filters( 'cloudinary_filter_wp_get_attachment_url', $replace_content ) ) {
 		add_filter( 'wp_get_attachment_url', __NAMESPACE__ . '\\filter_wp_get_attachment_url', 999 );
 	}
-	if ( apply_filters( 'cloudinary_wp_calculate_image_srcset', $replace_content ) ) {
+	if ( apply_filters( 'cloudinary_filter_wp_calculate_image_srcset', $replace_content ) ) {
 		add_filter( 'wp_calculate_image_srcset', __NAMESPACE__ . '\\filter_wp_calculate_image_srcset', 999 );
 	}
 }
