@@ -30,11 +30,11 @@ class Core {
 	 * @return void
 	 */
 	public function setup() {
-		$this->_cloud_name             = apply_filters( 'cloudinary_cloud_name', get_option( 'cloudinary_cloud_name' ) );
-		$this->_auto_mapping_folder    = apply_filters( 'cloudinary_auto_mapping_folder', get_option( 'cloudinary_auto_mapping_folder' ) );
-		$this->_options['urls']        = get_option( 'cloudinary_urls' );
-		$upload_dir                    = wp_upload_dir();
-		$this->_options['upload_url']  = apply_filters( 'cloudinary_upload_url', $upload_dir['baseurl'] );
+		$this->_cloud_name            = apply_filters( 'cloudinary_cloud_name', get_option( 'cloudinary_cloud_name' ) );
+		$this->_auto_mapping_folder   = apply_filters( 'cloudinary_auto_mapping_folder', get_option( 'cloudinary_auto_mapping_folder' ) );
+		$this->_options['urls']       = get_option( 'cloudinary_urls' );
+		$upload_dir                   = wp_upload_dir();
+		$this->_options['upload_url'] = apply_filters( 'cloudinary_upload_url', $upload_dir['baseurl'] );
 
 		if ( ! empty( $this->_cloud_name ) && ! empty( $this->_auto_mapping_folder ) ) {
 			$this->_setup = true;
@@ -112,7 +112,7 @@ class Core {
 				}, array_map( 'trim', explode( "\n", $this->_options['urls'] ) ) );
 			}
 
-			$this->_urls = apply_filters( 'cloudinary_urls', $this->_urls );
+			$this->_urls        = apply_filters( 'cloudinary_urls', $this->_urls );
 			$this->_url_counter = 0;
 
 			// Something went wrong, fallback to default URL.
