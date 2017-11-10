@@ -97,8 +97,8 @@ class JB_Test_Cloudinary_Plugin extends WP_UnitTestCase {
 		$file_info          = pathinfo( $file );
 		$test_file_name     = 'test-file-name';
 		$wp_upload_dir      = self::$_upload_dir;
-		$image_path         = '/uploads' . $wp_upload_dir['subdir'] . '/' . $file_info['basename'];
-		$image_path_2       = '/uploads' . $wp_upload_dir['subdir'] . '/' . $file_info['filename'] . '/' . $test_file_name . '.' . $file_info['extension'];
+		$image_path         = $wp_upload_dir['subdir'] . '/' . $file_info['basename'];
+		$image_path_2       = $wp_upload_dir['subdir'] . '/' . $file_info['filename'] . '/' . $test_file_name . '.' . $file_info['extension'];
 		$original_image_url = wp_get_attachment_url( self::$_image_id );
 		$options            = array(
 			'transform' => array(
@@ -135,7 +135,7 @@ class JB_Test_Cloudinary_Plugin extends WP_UnitTestCase {
 		cloudinary_ignore_start();
 		$content = 'Test content. ' . get_image_tag( self::$_image_id, '', '', 'none', 'full' );
 		cloudinary_ignore_end();
-		$updated_content = str_replace( self::$_upload_dir['baseurl'], 'https://res-1.cloudinary.com/test-cloud/test-auto-folder/uploads', $content );
+		$updated_content = str_replace( self::$_upload_dir['baseurl'], 'https://res-1.cloudinary.com/test-cloud/test-auto-folder', $content );
 		$this->assertEquals( cloudinary_update_content_images( $content ), $updated_content, 'Content image incorrect.' );
 	}
 
