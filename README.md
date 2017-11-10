@@ -8,7 +8,7 @@ Easy peasy 😎
 
 ## Why did you build this plugin?
 
-There already is an **official Cloudinary plugin** available. But in my opinion, it's an overkill and takes over the admin UI. This plugin aims to be:
+There already is an **official Cloudinary plugin** available. But in my opinion, it's a bit of an overkill and takes over the admin UI. This plugin aims to be:
 
 * **Super simple** and light-weight
 * Totally seamless and **out of the way**
