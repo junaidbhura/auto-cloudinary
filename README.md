@@ -44,6 +44,8 @@ This plugin does two main things:
 
 #### `cloudinary_url( $identifier, $args )`
 
+This function returns a Cloudinary Auto Upload URL for an image. Please read the [Best Practices](https://github.com/junaidbhura/auto-cloudinary/wiki/Best-Practices) page before using this.
+
 **Parameters**
 
 * **identifier** (integer/string)(required) : Either the ID of the attachment, or a full image URL.
