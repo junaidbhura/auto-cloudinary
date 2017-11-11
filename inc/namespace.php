@@ -177,7 +177,7 @@ function filter_wp_calculate_image_srcset( $sources, $size_array, $image_src, $i
 			$original_url = cloudinary_get_original_url( $attachment_id );
 			foreach ( $sources as $key => $source ) {
 				$dimensions = get_srcset_dimensions( $image_meta, $source );
-				$transform = array();
+				$transform  = array();
 				if ( ! empty( $dimensions ) ) {
 					$transform = array(
 						'transform' => $dimensions,
