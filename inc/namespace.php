@@ -63,7 +63,9 @@ function bootstrap() {
 	if ( apply_filters( 'cloudinary_filter_wp_get_attachment_url', $replace_content ) ) {
 		add_filter( 'wp_get_attachment_url', __NAMESPACE__ . '\\filter_wp_get_attachment_url', 999, 2 );
 	}
-	add_filter( 'image_downsize', __NAMESPACE__ . '\\filter_image_downsize', 999, 3 );
+	if ( apply_filters( 'cloudinary_filter_image_downsize', $replace_content ) ) {
+		add_filter( 'image_downsize', __NAMESPACE__ . '\\filter_image_downsize', 999, 3 );
+	}
 	if ( apply_filters( 'cloudinary_filter_wp_calculate_image_srcset', $replace_content ) ) {
 		add_filter( 'wp_calculate_image_srcset', __NAMESPACE__ . '\\filter_wp_calculate_image_srcset', 999, 5 );
 	}
