@@ -61,8 +61,9 @@ function bootstrap() {
 		add_filter( 'the_content', 'cloudinary_update_content_images', 999 );
 	}
 	if ( apply_filters( 'cloudinary_filter_wp_get_attachment_url', $replace_content ) ) {
-		add_filter( 'wp_get_attachment_url', __NAMESPACE__ . '\\filter_wp_get_attachment_url', 999 );
+		add_filter( 'wp_get_attachment_url', __NAMESPACE__ . '\\filter_wp_get_attachment_url', 999, 2 );
 	}
+	add_filter( 'image_downsize', __NAMESPACE__ . '\\filter_image_downsize', 999, 3 );
 	if ( apply_filters( 'cloudinary_filter_wp_calculate_image_srcset', $replace_content ) ) {
 		add_filter( 'wp_calculate_image_srcset', __NAMESPACE__ . '\\filter_wp_calculate_image_srcset', 999, 5 );
 	}
@@ -119,13 +120,45 @@ function options_page() {
  * Filter wp_get_attachment_url to use Cloudinary.
  *
  * @param  string $url
+ * @param  int    $post_id
  * @return string
  */
-function filter_wp_get_attachment_url( $url ) {
+function filter_wp_get_attachment_url( $url, $post_id ) {
 	if ( ! apply_filters( 'cloudinary_ignore', false ) ) {
 		return cloudinary_url( $url );
 	}
 	return $url;
+}
+
+/**
+ * Filter image_downsize to use Cloudinary.
+ *
+ * @param  bool  $downsize
+ * @param  int   $id
+ * @param  mixed $size
+ * @return array|bool
+ */
+function filter_image_downsize( $downsize, $id, $size ) {
+	if ( 'full' === $size || is_array( $size ) || apply_filters( 'cloudinary_ignore', false ) ) {
+		return false;
+	}
+
+	$dimensions = get_image_size( $size );
+	if ( empty( $dimensions ) ) {
+		return false;
+	}
+
+	return array(
+		cloudinary_url( $id, array(
+			'transform' => array(
+				'width'  => $dimensions['width'],
+				'height' => $dimensions['height'],
+			),
+		) ),
+		$dimensions['width'],
+		$dimensions['height'],
+		true, // Is intermediate.
+	);
 }
 
 /**
@@ -142,18 +175,93 @@ function filter_wp_calculate_image_srcset( $sources, $size_array, $image_src, $i
 	if ( ! apply_filters( 'cloudinary_ignore', false ) ) {
 		if ( ! empty( $sources ) ) {
 			$original_url = cloudinary_get_original_url( $attachment_id );
-			foreach ( $sources as $width => $source ) {
-				$transform = apply_filters( 'cloudinary_image_srcset_transform', array(
-					'transform' => array(
-						'width' => $width,
-					),
-				), $width, $original_url, $attachment_id );
+			foreach ( $sources as $key => $source ) {
+				$dimensions = get_srcset_dimensions( $image_meta, $source );
+				$transform = array();
+				if ( ! empty( $dimensions ) ) {
+					$transform = array(
+						'transform' => $dimensions,
+					);
+				}
+				$transform = apply_filters( 'cloudinary_image_srcset_transform', $transform, $original_url, $attachment_id );
 
 				if ( ! empty( $transform ) ) {
-					$sources[ $width ]['url'] = cloudinary_url( $original_url, $transform );
+					$sources[ $key ]['url'] = cloudinary_url( $original_url, $transform );
 				}
 			}
 		}
 	}
 	return $sources;
+}
+
+/**
+ * Get dimensions from image meta which matches a descriptor.
+ *
+ * @param  array $image_meta
+ * @param  array $source
+ * @return array
+ */
+function get_srcset_dimensions( $image_meta = array(), $source = array() ) {
+	$dimension = 'w' === $source['descriptor'] ? 'width' : 'height';
+	foreach ( $image_meta['sizes'] as $key => $size ) {
+		if ( $size[ $dimension ] === $source['value'] ) {
+			return array(
+				'width'  => $size['width'],
+				'height' => $size['height'],
+			);
+		}
+	}
+	return array(
+		$dimension => $source['value'],
+	);
+}
+
+/**
+ * Get size information for all currently-registered image sizes.
+ *
+ * @global $_wp_additional_image_sizes
+ * @uses   get_intermediate_image_sizes()
+ * @return array $sizes Data for all currently-registered image sizes.
+ *
+ * @see    https://codex.wordpress.org/Function_Reference/get_intermediate_image_sizes
+ */
+function get_image_sizes() {
+	global $_wp_additional_image_sizes;
+
+	$sizes = array();
+
+	foreach ( get_intermediate_image_sizes() as $_size ) {
+		if ( in_array( $_size, array( 'thumbnail', 'medium', 'medium_large', 'large' ) ) ) {
+			$sizes[ $_size ]['width']  = get_option( "{$_size}_size_w" );
+			$sizes[ $_size ]['height'] = get_option( "{$_size}_size_h" );
+			$sizes[ $_size ]['crop']   = (bool) get_option( "{$_size}_crop" );
+		} elseif ( isset( $_wp_additional_image_sizes[ $_size ] ) ) {
+			$sizes[ $_size ] = array(
+				'width'  => $_wp_additional_image_sizes[ $_size ]['width'],
+				'height' => $_wp_additional_image_sizes[ $_size ]['height'],
+				'crop'   => $_wp_additional_image_sizes[ $_size ]['crop'],
+			);
+		}
+	}
+
+	return $sizes;
+}
+
+/**
+ * Get size information for a specific image size.
+ *
+ * @uses   get_image_sizes()
+ * @param  string $size The image size for which to retrieve data.
+ * @return bool|array $size Size data about an image size or false if the size doesn't exist.
+ *
+ * @see    https://codex.wordpress.org/Function_Reference/get_intermediate_image_sizes
+ */
+function get_image_size( $size ) {
+	$sizes = get_image_sizes();
+
+	if ( ! empty( $sizes ) && isset( $sizes[ $size ] ) ) {
+		return $sizes[ $size ];
+	}
+
+	return false;
 }
