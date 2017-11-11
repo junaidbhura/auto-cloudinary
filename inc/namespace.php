@@ -64,7 +64,7 @@ function bootstrap() {
 		add_filter( 'wp_get_attachment_url', __NAMESPACE__ . '\\filter_wp_get_attachment_url', 999 );
 	}
 	if ( apply_filters( 'cloudinary_filter_wp_calculate_image_srcset', $replace_content ) ) {
-		add_filter( 'wp_calculate_image_srcset', __NAMESPACE__ . '\\filter_wp_calculate_image_srcset', 999 );
+		add_filter( 'wp_calculate_image_srcset', __NAMESPACE__ . '\\filter_wp_calculate_image_srcset', 999, 5 );
 	}
 }
 
@@ -131,14 +131,27 @@ function filter_wp_get_attachment_url( $url ) {
 /**
  * Filter wp_calculate_image_srcset to use Cloudinary.
  *
- * @param  array $sources
+ * @param  array  $sources
+ * @param  array  $size_array
+ * @param  string $image_src
+ * @param  array  $image_meta
+ * @param  int    $attachment_id
  * @return array
  */
-function filter_wp_calculate_image_srcset( $sources ) {
+function filter_wp_calculate_image_srcset( $sources, $size_array, $image_src, $image_meta, $attachment_id ) {
 	if ( ! apply_filters( 'cloudinary_ignore', false ) ) {
 		if ( ! empty( $sources ) ) {
-			foreach ( $sources as $key => $source ) {
-				$sources[ $key ]['url'] = cloudinary_url( $sources[ $key ]['url'] );
+			$original_url = cloudinary_get_original_url( $attachment_id );
+			foreach ( $sources as $width => $source ) {
+				$transform = apply_filters( 'cloudinary_image_srcset_transform', array(
+					'transform' => array(
+						'width' => $width,
+					),
+				), $width, $original_url, $attachment_id );
+
+				if ( ! empty( $transform ) ) {
+					$sources[ $width ]['url'] = cloudinary_url( $original_url, $transform );
+				}
 			}
 		}
 	}
