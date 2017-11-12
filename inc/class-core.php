@@ -67,6 +67,14 @@ class Core {
 			return $original_url;
 		}
 
+		// Validate URL.
+		if ( 0 !== strpos( $original_url, $this->_options['upload_url'] ) ) {
+			return $original_url;
+		}
+
+		// Default args.
+		$args = array_merge_recursive( apply_filters( 'cloudinary_default_args', array() ), $args );
+
 		// Filter args.
 		$args = apply_filters( 'cloudinary_args', $args, $identifier );
 
