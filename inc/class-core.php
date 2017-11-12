@@ -67,6 +67,9 @@ class Core {
 			return $original_url;
 		}
 
+		// Filter args.
+		$args = apply_filters( 'cloudinary_args', $args, $identifier );
+
 		// Start building the URL.
 		$url = $this->get_domain() . '/' . $this->_cloud_name;
 
@@ -93,7 +96,7 @@ class Core {
 		}
 
 		// All done, let's return it.
-		return apply_filters( 'cloudinary_url', $url );
+		return apply_filters( 'cloudinary_url', $url, $identifier, $args );
 	}
 
 	/**
