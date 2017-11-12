@@ -2,7 +2,6 @@
 
 namespace JB\Cloudinary;
 
-
 class Frontend {
 
 	private static $_instance = null;
@@ -34,29 +33,12 @@ class Frontend {
 		if ( apply_filters( 'cloudinary_filter_the_content', $replace_content ) ) {
 			add_filter( 'the_content', 'cloudinary_update_content_images', 999 );
 		}
-		if ( apply_filters( 'cloudinary_filter_wp_get_attachment_url', $replace_content ) ) {
-			add_filter( 'wp_get_attachment_url', array( $this, 'filter_wp_get_attachment_url' ), 999, 2 );
-		}
 		if ( apply_filters( 'cloudinary_filter_image_downsize', $replace_content ) ) {
 			add_filter( 'image_downsize', array( $this, 'filter_image_downsize' ), 999, 3 );
 		}
 		if ( apply_filters( 'cloudinary_filter_wp_calculate_image_srcset', $replace_content ) ) {
 			add_filter( 'wp_calculate_image_srcset', array( $this, 'filter_wp_calculate_image_srcset' ), 999, 5 );
 		}
-	}
-
-	/**
-	 * Filter wp_get_attachment_url to use Cloudinary.
-	 *
-	 * @param  string $url
-	 * @param  int    $post_id
-	 * @return string
-	 */
-	public function filter_wp_get_attachment_url( $url, $post_id ) {
-		if ( ! apply_filters( 'cloudinary_ignore', false ) ) {
-			return cloudinary_url( $url );
-		}
-		return $url;
 	}
 
 	/**
@@ -68,7 +50,7 @@ class Frontend {
 	 * @return array|bool
 	 */
 	public function filter_image_downsize( $downsize, $id, $size ) {
-		if ( 'full' === $size || is_array( $size ) || apply_filters( 'cloudinary_ignore', false ) ) {
+		if ( 'full' === $size || is_array( $size ) ) {
 			return false;
 		}
 
@@ -101,22 +83,19 @@ class Frontend {
 	 * @return array
 	 */
 	public function filter_wp_calculate_image_srcset( $sources, $size_array, $image_src, $image_meta, $attachment_id ) {
-		if ( ! apply_filters( 'cloudinary_ignore', false ) ) {
-			if ( ! empty( $sources ) ) {
-				$original_url = cloudinary_get_original_url( $attachment_id );
-				foreach ( $sources as $key => $source ) {
-					$dimensions = $this->get_srcset_dimensions( $image_meta, $source );
-					$transform  = array();
-					if ( ! empty( $dimensions ) ) {
-						$transform = array(
-							'transform' => $dimensions,
-						);
-					}
-					$transform = apply_filters( 'cloudinary_image_srcset_transform', $transform, $original_url, $attachment_id );
+		if ( ! empty( $sources ) ) {
+			foreach ( $sources as $key => $source ) {
+				$dimensions = $this->get_srcset_dimensions( $image_meta, $source );
+				$transform  = array();
+				if ( ! empty( $dimensions ) ) {
+					$transform = array(
+						'transform' => $dimensions,
+					);
+				}
+				$transform = apply_filters( 'cloudinary_image_srcset_transform', $transform, $image_src, $attachment_id );
 
-					if ( ! empty( $transform ) ) {
-						$sources[ $key ]['url'] = cloudinary_url( $original_url, $transform );
-					}
+				if ( ! empty( $transform ) ) {
+					$sources[ $key ]['url'] = cloudinary_url( $image_src, $transform );
 				}
 			}
 		}

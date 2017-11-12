@@ -94,7 +94,6 @@ class JB_Test_Cloudinary_Plugin extends WP_UnitTestCase {
 	 * @covers \JB\Cloudinary\Core::get_url()
 	 */
 	function test_get_url() {
-		cloudinary_ignore_start();
 		$file               = self::$_attached_file;
 		$file_info          = pathinfo( $file );
 		$test_file_name     = 'test-file-name';
@@ -115,7 +114,6 @@ class JB_Test_Cloudinary_Plugin extends WP_UnitTestCase {
 			'file_name' => $test_file_name,
 		);
 		$options_3          = array_merge( $options, $options_2 );
-		cloudinary_ignore_end();
 
 		$this->assertEquals( cloudinary_url( self::$_image_id ), 'https://res-2.cloudinary.com/test-cloud/test-auto-folder' . $image_path, 'Incorrect URL.' );
 		$this->assertEquals( cloudinary_url( $original_image_url ), 'https://res-3.cloudinary.com/test-cloud/test-auto-folder' . $image_path, 'Incorrect URL.' );
@@ -134,9 +132,7 @@ class JB_Test_Cloudinary_Plugin extends WP_UnitTestCase {
 	 * @covers cloudinary_update_content_images()
 	 */
 	function test_update_content_images() {
-		cloudinary_ignore_start();
 		$content = 'Test content. ' . get_image_tag( self::$_image_id, '', '', 'none', 'full' );
-		cloudinary_ignore_end();
 		$updated_content = str_replace( self::$_upload_dir['baseurl'], 'https://res-1.cloudinary.com/test-cloud/w_1920,h_1080/test-auto-folder', $content );
 		$this->assertEquals( cloudinary_update_content_images( $content ), $updated_content, 'Content image incorrect.' );
 	}
@@ -150,10 +146,10 @@ class JB_Test_Cloudinary_Plugin extends WP_UnitTestCase {
 		$wp_upload_dir = self::$_upload_dir;
 		$image_path    = $wp_upload_dir['subdir'] . '/' . $file_info['basename'];
 		$test_srcset   = array(
-			'https://res-3.cloudinary.com/test-cloud/w_1920/test-auto-folder' . $image_path . ' 1920w',
-			'https://res-1.cloudinary.com/test-cloud/w_300,h_169/test-auto-folder' . $image_path . ' 300w',
-			'https://res-2.cloudinary.com/test-cloud/w_768,h_432/test-auto-folder' . $image_path . ' 768w',
-			'https://res-3.cloudinary.com/test-cloud/w_1024,h_576/test-auto-folder' . $image_path . ' 1024w',
+			'https://res-2.cloudinary.com/test-cloud/w_1920/test-auto-folder' . $image_path . ' 1920w',
+			'https://res-3.cloudinary.com/test-cloud/w_300,h_169/test-auto-folder' . $image_path . ' 300w',
+			'https://res-1.cloudinary.com/test-cloud/w_768,h_432/test-auto-folder' . $image_path . ' 768w',
+			'https://res-2.cloudinary.com/test-cloud/w_1024,h_576/test-auto-folder' . $image_path . ' 1024w',
 		);
 		$srcset        = wp_get_attachment_image_srcset( self::$_image_id, 'full' );
 
