@@ -50,11 +50,30 @@ class Frontend {
 	 * @return array|bool
 	 */
 	public function filter_image_downsize( $downsize, $id, $size ) {
-		if ( 'full' === $size || is_array( $size ) ) {
+		if ( apply_filters( 'cloudinary_ignore', false ) ) {
 			return false;
 		}
 
-		$dimensions = $this->get_image_size( $size );
+		$dimensions = array();
+		if ( is_array( $size ) ) {
+			if ( 2 === count( $size ) ) {
+				$dimensions = array(
+					'width'  => $size[0],
+					'height' => $size[1],
+				);
+			}
+		} elseif ( 'full' === $size ) {
+			$meta = wp_get_attachment_metadata( $id );
+			if ( isset( $meta['width'] ) && isset( $meta['height'] ) ) {
+				$dimensions = array(
+					'width'  => $meta['width'],
+					'height' => $meta['height'],
+				);
+			}
+		} else {
+			$dimensions = $this->get_image_size( $size );
+		}
+
 		if ( empty( $dimensions ) ) {
 			return false;
 		}
@@ -68,7 +87,6 @@ class Frontend {
 			) ),
 			$dimensions['width'],
 			$dimensions['height'],
-			true, // Is intermediate.
 		);
 	}
 
@@ -83,7 +101,12 @@ class Frontend {
 	 * @return array
 	 */
 	public function filter_wp_calculate_image_srcset( $sources, $size_array, $image_src, $image_meta, $attachment_id ) {
+		if ( apply_filters( 'cloudinary_ignore', false ) ) {
+			return $sources;
+		}
+
 		if ( ! empty( $sources ) ) {
+			$original_url = wp_get_attachment_url( $attachment_id );
 			foreach ( $sources as $key => $source ) {
 				$dimensions = $this->get_srcset_dimensions( $image_meta, $source );
 				$transform  = array();
@@ -92,10 +115,10 @@ class Frontend {
 						'transform' => $dimensions,
 					);
 				}
-				$transform = apply_filters( 'cloudinary_image_srcset_transform', $transform, $image_src, $attachment_id );
+				$transform = apply_filters( 'cloudinary_image_srcset_transform', $transform, $original_url, $attachment_id );
 
 				if ( ! empty( $transform ) ) {
-					$sources[ $key ]['url'] = cloudinary_url( $image_src, $transform );
+					$sources[ $key ]['url'] = cloudinary_url( $original_url, $transform );
 				}
 			}
 		}

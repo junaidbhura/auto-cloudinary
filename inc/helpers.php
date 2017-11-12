@@ -69,3 +69,25 @@ if ( ! function_exists( 'cloudinary_update_content_images' ) ) {
 		return $content;
 	}
 }
+
+if ( ! function_exists( 'cloudinary_ignore_start' ) ) {
+	/**
+	 * Helper function to add a filter.
+	 *
+	 * @return void
+	 */
+	function cloudinary_ignore_start() {
+		add_filter( 'cloudinary_ignore', '__return_true', 10 );
+	}
+}
+
+if ( ! function_exists( 'cloudinary_ignore_end' ) ) {
+	/**
+	 * Helper function to remove a filter.
+	 *
+	 * @return void
+	 */
+	function cloudinary_ignore_end() {
+		remove_filter( 'cloudinary_ignore', '__return_true', 10 );
+	}
+}
