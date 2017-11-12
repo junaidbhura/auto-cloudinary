@@ -132,7 +132,7 @@ class JB_Test_Cloudinary_Plugin extends WP_UnitTestCase {
 	 * @covers cloudinary_update_content_images()
 	 */
 	function test_update_content_images() {
-		$content = 'Test content. ' . get_image_tag( self::$_image_id, '', '', 'none', 'full' );
+		$content         = 'Test content. ' . get_image_tag( self::$_image_id, '', '', 'none', 'full' );
 		$updated_content = str_replace( self::$_upload_dir['baseurl'], 'https://res-1.cloudinary.com/test-cloud/w_1920,h_1080/test-auto-folder', $content );
 		$this->assertEquals( cloudinary_update_content_images( $content ), $updated_content, 'Content image incorrect.' );
 	}
