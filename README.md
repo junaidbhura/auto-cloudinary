@@ -1,4 +1,7 @@
+
 # Cloudinary Auto-Upload for WordPress
+
+<a href="https://travis-ci.org/humanmade/tachyon" target="_blank"><img src="https://api.travis-ci.org/junaidbhura/auto-cloudinary.svg?branch=master" alt="Build status"></a>
 
 This plugin provides a **super simple** [Cloudinary auto-upload](https://cloudinary.com/documentation/fetch_remote_images#auto_upload_remote_resources) implementation for WordPress.
 
