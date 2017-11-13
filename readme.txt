@@ -12,9 +12,11 @@ Super simple Cloudinary auto-upload implementation for WordPress.
 
 [Check out the Github Repository ♥](https://github.com/junaidbhura/auto-cloudinary)
 
-This plugin provides a super simple [Cloudinary auto-upload](https://cloudinary.com/documentation/fetch_remote_images#auto_upload_remote_resources) implementation for WordPress.
+This plugin provides a **super simple** [Cloudinary auto-upload](https://cloudinary.com/documentation/fetch_remote_images#auto_upload_remote_resources) implementation for WordPress.
 
-Cloudinary will **automatically fetch and serve the images** from your media library, without you having to worry about the complicated upload API! Just [set up auto-upload](https://github.com/junaidbhura/auto-cloudinary/wiki/Setup) in your Cloudinary settings, enter the details in the plugin's options, and you're all set!
+It is inspired by [Photon](https://developer.wordpress.com/docs/photon/) and [Tachyon](https://github.com/humanmade/tachyon-plugin).
+
+Cloudinary will **automatically fetch and serve the images** from your media library like a **CDN**, without you having to worry about the complicated upload API! Just [set up auto-upload](https://github.com/junaidbhura/auto-cloudinary/wiki/Setup) in your Cloudinary settings, enter the details in the plugin's options, and you're all set!
 
 Easy peasy 😎
 
