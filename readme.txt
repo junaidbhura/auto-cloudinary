@@ -105,14 +105,17 @@ $url_1 = cloudinary_url( 123, array(
 		'gravity' => 'face',
 	),
 	'file_name' => 'dynamic-file-name',
-) ); // https://res.cloudinary.com/cloud-name/images/w_300,h_200,c_fill,q_80,g_face/auto-mapping-folder/2017/12/my-image/dynamic-file-name.jpg
+) );
 
 $url_2 = cloudinary_url( 'https://www.yourwebsite.com/wp-content/uploads/2017/12/my-image.jpg', array(
 	'transform' => array(
 		'width'   => 100,
 		'height'  => 100,
 	),
-) ); // https://res.cloudinary.com/cloud-name/w_100,h_100/auto-mapping-folder/2017/12/my-image.jpg
+) );
+
+// $url_1 : https://res.cloudinary.com/cloud-name/images/w_300,h_200,c_fill,q_80,g_face/auto-mapping-folder/2017/12/my-image/dynamic-file-name.jpg
+// $url_2 : https://res.cloudinary.com/cloud-name/w_100,h_100/auto-mapping-folder/2017/12/my-image.jpg
 ?>
 
 <img src="<?php echo esc_url( $url_1 ); ?>" width="300" height="200" alt="">
