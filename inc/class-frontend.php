@@ -111,7 +111,7 @@ class Frontend {
 		}
 
 		if ( ! empty( $sources ) ) {
-			$original_url = wp_get_attachment_url( $attachment_id );
+			$original_url = cloudinary_get_original_url( $attachment_id );
 			foreach ( $sources as $key => $source ) {
 				$dimensions = $this->get_srcset_dimensions( $image_meta, $source );
 				$transform  = array();

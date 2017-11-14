@@ -100,10 +100,12 @@ if ( ! function_exists( 'cloudinary_get_original_url' ) ) {
 	 * @return false|string
 	 */
 	function cloudinary_get_original_url( $id = 0 ) {
-		cloudinary_ignore_start();
-		$original_url = wp_get_attachment_url( $id );
-		cloudinary_ignore_end();
-
-		return $original_url;
+		/**
+		 * wp_get_attachment_url() does not get modified right now.
+		 *
+		 * It might in a future version, hence this helper function to
+		 * future-proof the code.
+		 */
+		return wp_get_attachment_url( $id );
 	}
 }
