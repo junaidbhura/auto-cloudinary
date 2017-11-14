@@ -271,7 +271,7 @@ class JB_Test_Cloudinary_Plugin extends WP_UnitTestCase {
 		$this->assertEquals(
 			cloudinary_url( self::$_image_id, array(
 				'transform' => array(
-					'width' => 500,
+					'width'  => 500,
 					'height' => 300,
 				),
 				'file_name' => 'test-file-name',
