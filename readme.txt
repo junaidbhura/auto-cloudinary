@@ -140,5 +140,8 @@ Activate the plugin through the 'Plugins' menu in WordPress.
 
 == Changelog ==
 
+= 1.0.1 =
+* Add default crop to replaced content images.
+
 = 1.0.0 =
 * First stable release.
