@@ -122,9 +122,9 @@ $url_2 = cloudinary_url( 'https://www.yourwebsite.com/wp-content/uploads/2017/12
 <img src="<?php echo esc_url( $url_2 ); ?>" width="100" height="100" alt="">
 `
 
-### Documentation
+### Quick Links
 
-The Wiki contains all the documentation for this plugin: [Documentation](https://github.com/junaidbhura/auto-cloudinary/wiki)
+[Setup](https://github.com/junaidbhura/auto-cloudinary/wiki/Setup) | [Issues](https://github.com/junaidbhura/auto-cloudinary/issues) | [Functions](https://github.com/junaidbhura/auto-cloudinary/wiki/Functions) | [Filters](https://github.com/junaidbhura/auto-cloudinary/wiki/Filters) | [Best Practices](https://github.com/junaidbhura/auto-cloudinary/wiki/Best-Practices)
 
 == Installation ==
 
