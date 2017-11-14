@@ -73,7 +73,10 @@ class Core {
 		}
 
 		// Default args.
-		$args = array_merge_recursive( apply_filters( 'cloudinary_default_args', array() ), $args );
+		$default_args = apply_filters( 'cloudinary_default_args', array() );
+		if ( ! empty( $default_args ) ) {
+			$args = array_replace_recursive( $default_args, $args );
+		}
 
 		// Filter args.
 		$args = apply_filters( 'cloudinary_args', $args, $identifier );

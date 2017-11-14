@@ -84,6 +84,7 @@ class Frontend {
 				'transform' => array(
 					'width'  => $dimensions['width'],
 					'height' => $dimensions['height'],
+					'crop'   => apply_filters( 'cloudinary_default_crop', 'fill' ),
 				),
 			);
 		}
@@ -116,6 +117,9 @@ class Frontend {
 				$dimensions = $this->get_srcset_dimensions( $image_meta, $source );
 				$transform  = array();
 				if ( ! empty( $dimensions ) ) {
+					$dimensions = array_merge_recursive( $dimensions, array(
+						'crop' => apply_filters( 'cloudinary_default_crop', 'fill' ),
+					) );
 					$transform = array(
 						'transform' => $dimensions,
 					);
