@@ -78,13 +78,18 @@ class Frontend {
 			return false;
 		}
 
-		return array(
-			cloudinary_url( $id, array(
+		$args = array();
+		if ( 'full' !== $size ) {
+			$args = array(
 				'transform' => array(
 					'width'  => $dimensions['width'],
 					'height' => $dimensions['height'],
 				),
-			) ),
+			);
+		}
+
+		return array(
+			cloudinary_url( $id, $args ),
 			$dimensions['width'],
 			$dimensions['height'],
 		);
