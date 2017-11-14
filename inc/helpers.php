@@ -51,6 +51,7 @@ if ( ! function_exists( 'cloudinary_update_content_images' ) ) {
 							'transform' => array(
 								'width'  => $width,
 								'height' => $height,
+								'crop'   => apply_filters( 'cloudinary_default_crop', 'fill' ),
 							),
 						) );
 					} else {
