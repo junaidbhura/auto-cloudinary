@@ -120,7 +120,7 @@ class Frontend {
 					$dimensions = array_merge_recursive( $dimensions, array(
 						'crop' => apply_filters( 'cloudinary_default_crop', 'fill' ),
 					) );
-					$transform = array(
+					$transform  = array(
 						'transform' => $dimensions,
 					);
 				}
