@@ -127,6 +127,7 @@ class Frontend {
 				}
 			}
 		}
+
 		return $sources;
 	}
 
