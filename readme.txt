@@ -1,7 +1,7 @@
 === Auto Cloudinary ===
 Contributors: junaidbhura
 Tags: cloudinary, dynamic-images, cdn, image-optimization, image-manipulation
-Requires at least: 4.0
+Requires at least: 4.4
 Tested up to: 4.9
 Requires PHP: 5.6
 Stable tag: 1.0.0
