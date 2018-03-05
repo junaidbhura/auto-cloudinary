@@ -291,4 +291,61 @@ class JB_Test_Cloudinary_Plugin extends WP_UnitTestCase {
 		$this->assertEquals( $src[0], 'https://res-3.cloudinary.com/test-cloud/c_scale,w_1024,h_576,g_face/test-auto-folder' . $this->get_image_path(), 'Incorrect SRC.' );
 	}
 
+	/**
+	 * @covers \JB\Cloudinary\Core::valid_value()
+	 */
+	function test_invalid_values() {
+		$this->assertEquals(
+			cloudinary_url( self::$_image_id, array(
+				'transform' => array(
+					'width'   => 0,
+					'height'  => 0,
+					'crop'    => 'fill',
+					'gravity' => 'face',
+				),
+			) ),
+			'https://res-1.cloudinary.com/test-cloud/c_fill,g_face/test-auto-folder' . $this->get_image_path(),
+			'Incorrect value.'
+		);
+
+		$this->assertEquals(
+			cloudinary_url( self::$_image_id, array(
+				'transform' => array(
+					'width'   => 100,
+					'height'  => 0,
+					'crop'    => 'fill',
+					'gravity' => 'face',
+				),
+			) ),
+			'https://res-2.cloudinary.com/test-cloud/w_100,c_fill,g_face/test-auto-folder' . $this->get_image_path(),
+			'Incorrect value.'
+		);
+
+		$this->assertEquals(
+			cloudinary_url( self::$_image_id, array(
+				'transform' => array(
+					'width'   => 0,
+					'height'  => 100,
+					'crop'    => 'fill',
+					'gravity' => 'face',
+				),
+			) ),
+			'https://res-3.cloudinary.com/test-cloud/h_100,c_fill,g_face/test-auto-folder' . $this->get_image_path(),
+			'Incorrect value.'
+		);
+
+		$this->assertEquals(
+			cloudinary_url( self::$_image_id, array(
+				'transform' => array(
+					'width'   => '',
+					'height'  => '',
+					'crop'    => 'fill',
+					'gravity' => 'face',
+				),
+			) ),
+			'https://res-1.cloudinary.com/test-cloud/c_fill,g_face/test-auto-folder' . $this->get_image_path(),
+			'Incorrect value.'
+		);
+	}
+
 }

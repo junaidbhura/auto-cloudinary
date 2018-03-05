@@ -145,6 +145,20 @@ class Core {
 	}
 
 	/**
+	 * Check if the value is valid.
+	 *
+	 * @param string $key
+	 * @param string $value
+	 * @return bool
+	 */
+	public function valid_value( $key = '', $value = '' ) {
+		if ( ( 'w' === $key || 'h' === $key ) && empty( $value ) ) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
 	 * Build a Cloudinary transformation slug from arguments.
 	 *
 	 * @param  array $args
@@ -196,7 +210,7 @@ class Core {
 
 		$slug = array();
 		foreach ( $args as $key => $value ) {
-			if ( array_key_exists( $key, $cloudinary_params ) ) {
+			if ( array_key_exists( $key, $cloudinary_params ) && $this->valid_value( $cloudinary_params[ $key ], $value ) ) {
 				$slug[] = $cloudinary_params[ $key ] . '_' . $value;
 			}
 		}
