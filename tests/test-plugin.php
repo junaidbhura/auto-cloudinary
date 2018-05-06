@@ -23,6 +23,8 @@ class JB_Test_Cloudinary_Plugin extends WP_UnitTestCase {
 		update_option( 'medium_size_w', 300 );
 		update_option( 'medium_size_h', 169 );
 
+		add_image_size( 'different_aspect_ratio', 400, 200, true );
+
 		self::$_upload_dir    = wp_upload_dir();
 		self::$_image_id      = self::upload_image();
 		self::$_attached_file = get_attached_file( self::$_image_id );
@@ -287,8 +289,15 @@ class JB_Test_Cloudinary_Plugin extends WP_UnitTestCase {
 			return 'scale';
 		}, 10, 1 );
 
+		add_filter( 'cloudinary_default_hard_crop', function() {
+			return 'fit';
+		} );
+
 		$src = wp_get_attachment_image_src( self::$_image_id, 'large' );
 		$this->assertEquals( $src[0], 'https://res-3.cloudinary.com/test-cloud/c_scale,w_1024,h_576,g_face/test-auto-folder' . $this->get_image_path(), 'Incorrect SRC.' );
+
+		$src = wp_get_attachment_image_src( self::$_image_id, 'different_aspect_ratio' );
+		$this->assertEquals( $src[0], 'https://res-1.cloudinary.com/test-cloud/c_fit,w_400,h_200,g_face/test-auto-folder' . $this->get_image_path(), 'Incorrect SRC.' );
 	}
 
 	/**
@@ -304,7 +313,7 @@ class JB_Test_Cloudinary_Plugin extends WP_UnitTestCase {
 					'gravity' => 'face',
 				),
 			) ),
-			'https://res-1.cloudinary.com/test-cloud/c_fill,g_face/test-auto-folder' . $this->get_image_path(),
+			'https://res-2.cloudinary.com/test-cloud/c_fill,g_face/test-auto-folder' . $this->get_image_path(),
 			'Incorrect value.'
 		);
 
@@ -317,7 +326,7 @@ class JB_Test_Cloudinary_Plugin extends WP_UnitTestCase {
 					'gravity' => 'face',
 				),
 			) ),
-			'https://res-2.cloudinary.com/test-cloud/w_100,c_fill,g_face/test-auto-folder' . $this->get_image_path(),
+			'https://res-3.cloudinary.com/test-cloud/w_100,c_fill,g_face/test-auto-folder' . $this->get_image_path(),
 			'Incorrect value.'
 		);
 
@@ -330,7 +339,7 @@ class JB_Test_Cloudinary_Plugin extends WP_UnitTestCase {
 					'gravity' => 'face',
 				),
 			) ),
-			'https://res-3.cloudinary.com/test-cloud/h_100,c_fill,g_face/test-auto-folder' . $this->get_image_path(),
+			'https://res-1.cloudinary.com/test-cloud/h_100,c_fill,g_face/test-auto-folder' . $this->get_image_path(),
 			'Incorrect value.'
 		);
 
@@ -343,7 +352,7 @@ class JB_Test_Cloudinary_Plugin extends WP_UnitTestCase {
 					'gravity' => 'face',
 				),
 			) ),
-			'https://res-1.cloudinary.com/test-cloud/c_fill,g_face/test-auto-folder' . $this->get_image_path(),
+			'https://res-2.cloudinary.com/test-cloud/c_fill,g_face/test-auto-folder' . $this->get_image_path(),
 			'Incorrect value.'
 		);
 	}
