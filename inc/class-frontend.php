@@ -5,6 +5,7 @@ namespace JB\Cloudinary;
 class Frontend {
 
 	private static $_instance = null;
+	private $_sizes           = array();
 
 	/**
 	 * Get current instance.
@@ -84,7 +85,7 @@ class Frontend {
 				'transform' => array(
 					'width'  => $dimensions['width'],
 					'height' => $dimensions['height'],
-					'crop'   => apply_filters( 'cloudinary_default_crop', 'fill' ),
+					'crop'   => isset( $dimensions['crop'] ) && (bool) $dimensions['crop'] ? apply_filters( 'cloudinary_default_hard_crop', 'fill' ) : apply_filters( 'cloudinary_default_crop', 'fill' ),
 				),
 			);
 		}
@@ -113,16 +114,29 @@ class Frontend {
 
 		if ( ! empty( $sources ) ) {
 			$original_url = cloudinary_get_original_url( $attachment_id );
+			$sizes        = $this->get_image_sizes();
 			foreach ( $sources as $key => $source ) {
 				$dimensions = $this->get_srcset_dimensions( $image_meta, $source );
 				$transform  = array();
 				if ( ! empty( $dimensions ) ) {
+
+					$hard_crop = false;
+					if ( ! empty( $dimensions['width'] ) && ! empty( $dimensions['height'] ) ) {
+						foreach ( $sizes as $size => $size_dimensions ) {
+							if ( $dimensions['width'] === $size_dimensions['width'] && $dimensions['height'] === $size_dimensions['height'] ) {
+								$hard_crop = (bool) $size_dimensions['crop'];
+								break;
+							}
+						}
+					}
+
 					$dimensions = array_merge_recursive( $dimensions, array(
-						'crop' => apply_filters( 'cloudinary_default_crop', 'fill' ),
+						'crop' => $hard_crop ? apply_filters( 'cloudinary_default_hard_crop', 'fill' ) : apply_filters( 'cloudinary_default_crop', 'fill' ),
 					) );
 					$transform  = array(
 						'transform' => $dimensions,
 					);
+
 				}
 				$transform = apply_filters( 'cloudinary_image_srcset_transform', $transform, $original_url, $attachment_id );
 
@@ -167,17 +181,19 @@ class Frontend {
 	 * @see    https://codex.wordpress.org/Function_Reference/get_intermediate_image_sizes
 	 */
 	public function get_image_sizes() {
-		global $_wp_additional_image_sizes;
+		if ( ! empty( $this->_sizes ) ) {
+			return $this->_sizes;
+		}
 
-		$sizes = array();
+		global $_wp_additional_image_sizes;
 
 		foreach ( get_intermediate_image_sizes() as $_size ) {
 			if ( in_array( $_size, array( 'thumbnail', 'medium', 'medium_large', 'large' ) ) ) {
-				$sizes[ $_size ]['width']  = get_option( "{$_size}_size_w" );
-				$sizes[ $_size ]['height'] = get_option( "{$_size}_size_h" );
-				$sizes[ $_size ]['crop']   = (bool) get_option( "{$_size}_crop" );
+				$this->_sizes[ $_size ]['width']  = get_option( "{$_size}_size_w" );
+				$this->_sizes[ $_size ]['height'] = get_option( "{$_size}_size_h" );
+				$this->_sizes[ $_size ]['crop']   = (bool) get_option( "{$_size}_crop" );
 			} elseif ( isset( $_wp_additional_image_sizes[ $_size ] ) ) {
-				$sizes[ $_size ] = array(
+				$this->_sizes[ $_size ] = array(
 					'width'  => $_wp_additional_image_sizes[ $_size ]['width'],
 					'height' => $_wp_additional_image_sizes[ $_size ]['height'],
 					'crop'   => $_wp_additional_image_sizes[ $_size ]['crop'],
@@ -185,7 +201,7 @@ class Frontend {
 			}
 		}
 
-		return $sizes;
+		return $this->_sizes;
 	}
 
 	/**
