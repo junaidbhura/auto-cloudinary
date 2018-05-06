@@ -285,9 +285,18 @@ class JB_Test_Cloudinary_Plugin extends WP_UnitTestCase {
 			'Incorrect filtered URL.'
 		);
 
-		add_filter( 'cloudinary_default_crop', function( $crop ) {
+		$src = wp_get_attachment_image_src( self::$_image_id, 'different_aspect_ratio' );
+		$this->assertEquals( $src[0], 'https://res-3.cloudinary.com/test-cloud/c_fill,w_400,h_200,g_face/test-auto-folder' . $this->get_image_path(), 'Incorrect SRC.' );
+
+		add_filter( 'cloudinary_default_crop', function() {
 			return 'scale';
-		}, 10, 1 );
+		} );
+
+		$src = wp_get_attachment_image_src( self::$_image_id, 'large' );
+		$this->assertEquals( $src[0], 'https://res-1.cloudinary.com/test-cloud/c_scale,w_1024,h_576,g_face/test-auto-folder' . $this->get_image_path(), 'Incorrect SRC.' );
+
+		$src = wp_get_attachment_image_src( self::$_image_id, 'different_aspect_ratio' );
+		$this->assertEquals( $src[0], 'https://res-2.cloudinary.com/test-cloud/c_scale,w_400,h_200,g_face/test-auto-folder' . $this->get_image_path(), 'Incorrect SRC.' );
 
 		add_filter( 'cloudinary_default_hard_crop', function() {
 			return 'fit';
