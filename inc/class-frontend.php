@@ -85,7 +85,7 @@ class Frontend {
 				'transform' => array(
 					'width'  => $dimensions['width'],
 					'height' => $dimensions['height'],
-					'crop'   => isset( $dimensions['crop'] ) && (bool) $dimensions['crop'] ? apply_filters( 'cloudinary_default_hard_crop', 'fill' ) : apply_filters( 'cloudinary_default_crop', 'fill' ),
+					'crop'   => cloudinary_default_crop( isset( $dimensions['crop'] ) && (bool) $dimensions['crop'] ),
 				),
 			);
 		}
@@ -131,7 +131,7 @@ class Frontend {
 					}
 
 					$dimensions = array_merge_recursive( $dimensions, array(
-						'crop' => $hard_crop ? apply_filters( 'cloudinary_default_hard_crop', 'fill' ) : apply_filters( 'cloudinary_default_crop', 'fill' ),
+						'crop' => cloudinary_default_crop( $hard_crop ),
 					) );
 					$transform  = array(
 						'transform' => $dimensions,

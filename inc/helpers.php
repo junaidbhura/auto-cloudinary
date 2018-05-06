@@ -67,7 +67,7 @@ if ( ! function_exists( 'cloudinary_update_content_images' ) ) {
 							'transform' => array(
 								'width'  => $width,
 								'height' => $height,
-								'crop'   => $hard_crop ? apply_filters( 'cloudinary_default_hard_crop', 'fill' ) : apply_filters( 'cloudinary_default_crop', 'fill' ),
+								'crop'   => cloudinary_default_crop( $hard_crop ),
 							),
 						) );
 					} else {
@@ -124,5 +124,21 @@ if ( ! function_exists( 'cloudinary_get_original_url' ) ) {
 		 * future-proof the code.
 		 */
 		return wp_get_attachment_url( $id );
+	}
+}
+
+if ( ! function_exists( 'cloudinary_default_crop' ) ) {
+	/**
+	 * Helper function to get the correct crop after applying filters.
+	 *
+	 * @param bool $hard_crop
+	 * @return string
+	 */
+	function cloudinary_default_crop( $hard_crop = false ) {
+		if ( $hard_crop ) {
+			return apply_filters( 'cloudinary_default_hard_crop', apply_filters( 'cloudinary_default_crop', 'fill' ) );
+		} else {
+			return apply_filters( 'cloudinary_default_crop', 'fill' );
+		}
 	}
 }
