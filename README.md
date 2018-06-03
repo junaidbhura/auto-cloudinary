@@ -12,6 +12,10 @@ Cloudinary will **automatically fetch and serve the images** from your media lib
 
 Easy peasy 😎
 
+## Quick Links
+
+[Setup](https://github.com/junaidbhura/auto-cloudinary/wiki/Setup) | [Issues](https://github.com/junaidbhura/auto-cloudinary/issues) | [Functions](https://github.com/junaidbhura/auto-cloudinary/wiki/Functions) | [Filters](https://github.com/junaidbhura/auto-cloudinary/wiki/Filters) | [Best Practices](https://github.com/junaidbhura/auto-cloudinary/wiki/Best-Practices)
+
 ## Why did you build this plugin?
 
 There already is an **official Cloudinary plugin** available. But in my opinion, it's a bit of an overkill and takes over the admin UI. This plugin aims to be:
@@ -113,7 +117,3 @@ $url_2 = cloudinary_url( 'https://www.yourwebsite.com/wp-content/uploads/2017/12
 <img src="<?php echo esc_url( $url_1 ); ?>" width="300" height="200" alt="">
 <img src="<?php echo esc_url( $url_2 ); ?>" width="100" height="100" alt="">
 ```
-
-## Quick Links
-
-[Setup](https://github.com/junaidbhura/auto-cloudinary/wiki/Setup) | [Issues](https://github.com/junaidbhura/auto-cloudinary/issues) | [Functions](https://github.com/junaidbhura/auto-cloudinary/wiki/Functions) | [Filters](https://github.com/junaidbhura/auto-cloudinary/wiki/Filters) | [Best Practices](https://github.com/junaidbhura/auto-cloudinary/wiki/Best-Practices)

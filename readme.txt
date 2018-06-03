@@ -4,7 +4,7 @@ Tags: cloudinary, dynamic-images, cdn, image-optimization, image-manipulation
 Requires at least: 4.4
 Tested up to: 4.9
 Requires PHP: 5.6
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 
 Super simple Cloudinary auto-upload implementation for WordPress.
 
@@ -19,6 +19,10 @@ It is inspired by [Photon](https://developer.wordpress.com/docs/photon/) and [Ta
 Cloudinary will **automatically fetch and serve the images** from your media library like a **CDN**, without you having to worry about the complicated upload API! Just [set up auto-upload](https://github.com/junaidbhura/auto-cloudinary/wiki/Setup) in your Cloudinary settings, enter the details in the plugin's options, and you're all set!
 
 Easy peasy 😎
+
+### Quick Links
+
+[Setup](https://github.com/junaidbhura/auto-cloudinary/wiki/Setup) | [Issues](https://github.com/junaidbhura/auto-cloudinary/issues) | [Functions](https://github.com/junaidbhura/auto-cloudinary/wiki/Functions) | [Filters](https://github.com/junaidbhura/auto-cloudinary/wiki/Filters) | [Best Practices](https://github.com/junaidbhura/auto-cloudinary/wiki/Best-Practices)
 
 ## Why did you build this plugin?
 
@@ -122,10 +126,6 @@ $url_2 = cloudinary_url( 'https://www.yourwebsite.com/wp-content/uploads/2017/12
 <img src="<?php echo esc_url( $url_2 ); ?>" width="100" height="100" alt="">
 `
 
-### Quick Links
-
-[Setup](https://github.com/junaidbhura/auto-cloudinary/wiki/Setup) | [Issues](https://github.com/junaidbhura/auto-cloudinary/issues) | [Functions](https://github.com/junaidbhura/auto-cloudinary/wiki/Functions) | [Filters](https://github.com/junaidbhura/auto-cloudinary/wiki/Filters) | [Best Practices](https://github.com/junaidbhura/auto-cloudinary/wiki/Best-Practices)
-
 == Installation ==
 
 Upload 'auto-cloudinary' to the '/wp-content/plugins/' directory.
@@ -139,6 +139,11 @@ Activate the plugin through the 'Plugins' menu in WordPress.
 3. Cloudinary Auto Upload Setup
 
 == Changelog ==
+
+= 1.0.3 =
+* New filters for default hard and soft crops [#2](https://github.com/junaidbhura/auto-cloudinary/issues/2). Props [@petersplugins](https://github.com/petersplugins)
+* Performance improvements
+* Full release details: [https://github.com/junaidbhura/auto-cloudinary/releases/tag/1.0.3](https://github.com/junaidbhura/auto-cloudinary/releases/tag/1.0.3)
 
 = 1.0.2 =
 * Remove empty width and height from URL [#1](https://github.com/junaidbhura/auto-cloudinary/issues/1)
