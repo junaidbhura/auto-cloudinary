@@ -36,6 +36,13 @@ if ( ! function_exists( 'cloudinary_update_content_images' ) ) {
 				$src    = preg_match( '/ src="([^"]*)"/', $image, $match_src ) ? $match_src[1] : '';
 				$width  = preg_match( '/ width="([0-9]+)"/', $image, $match_width ) ? (int) $match_width[1] : 0;
 				$height = preg_match( '/ height="([0-9]+)"/', $image, $match_height ) ? (int) $match_height[1] : 0;
+				$class  = preg_match( '/ class="([^"]*)"/', $image, $match_class ) ? $match_class[1] : '';
+
+				if ( ! empty( $class ) ) {
+					$size = preg_match( '/size-([a-zA-Z0-9-_]+)?/', $class, $match_size ) ? $match_size[1] : '';
+				} else {
+					$size = '';
+				}
 
 				$updated_image = apply_filters( 'cloudinary_content_image', $image, $attachment_id, $src, $width, $height );
 
@@ -46,12 +53,21 @@ if ( ! function_exists( 'cloudinary_update_content_images' ) ) {
 				} elseif ( ! empty( $src ) ) {
 					// Filter hasn't updated the image, let's update it now.
 					if ( ! empty( $width ) && ! empty( $height ) ) {
+						// Let's see if we can find this image's crop type.
+						$hard_crop = false;
+						if ( ! empty( $size ) ) {
+							$dimensions = JB\Cloudinary\Frontend::get_instance()->get_image_size( $size );
+							if ( ! empty( $dimensions ) && (bool) $dimensions['crop'] ) {
+								$hard_crop = true;
+							}
+						}
+
 						// We have a width and height, let's use them to transform the image.
 						$updated_src = cloudinary_url( $attachment_id, array(
 							'transform' => array(
 								'width'  => $width,
 								'height' => $height,
-								'crop'   => apply_filters( 'cloudinary_default_crop', 'fill' ),
+								'crop'   => cloudinary_default_crop( $hard_crop ),
 							),
 						) );
 					} else {
@@ -108,5 +124,21 @@ if ( ! function_exists( 'cloudinary_get_original_url' ) ) {
 		 * future-proof the code.
 		 */
 		return wp_get_attachment_url( $id );
+	}
+}
+
+if ( ! function_exists( 'cloudinary_default_crop' ) ) {
+	/**
+	 * Helper function to get the correct crop after applying filters.
+	 *
+	 * @param bool $hard_crop
+	 * @return string
+	 */
+	function cloudinary_default_crop( $hard_crop = false ) {
+		if ( $hard_crop ) {
+			return apply_filters( 'cloudinary_default_hard_crop', apply_filters( 'cloudinary_default_crop', 'fill' ) );
+		} else {
+			return apply_filters( 'cloudinary_default_soft_crop', apply_filters( 'cloudinary_default_crop', 'fill' ) );
+		}
 	}
 }
