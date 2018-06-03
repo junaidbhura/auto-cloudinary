@@ -138,7 +138,7 @@ if ( ! function_exists( 'cloudinary_default_crop' ) ) {
 		if ( $hard_crop ) {
 			return apply_filters( 'cloudinary_default_hard_crop', apply_filters( 'cloudinary_default_crop', 'fill' ) );
 		} else {
-			return apply_filters( 'cloudinary_default_crop', 'fill' );
+			return apply_filters( 'cloudinary_default_soft_crop', apply_filters( 'cloudinary_default_crop', 'fill' ) );
 		}
 	}
 }
