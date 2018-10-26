@@ -135,10 +135,11 @@ if ( ! function_exists( 'cloudinary_default_crop' ) ) {
 	 * @return string
 	 */
 	function cloudinary_default_crop( $hard_crop = false ) {
+		$core = JB\Cloudinary\Core::get_instance();
 		if ( $hard_crop ) {
-			return apply_filters( 'cloudinary_default_hard_crop', apply_filters( 'cloudinary_default_crop', 'fill' ) );
+			return apply_filters( 'cloudinary_default_hard_crop', apply_filters( 'cloudinary_default_crop', $core->_default_hard_crop ) );
 		} else {
-			return apply_filters( 'cloudinary_default_soft_crop', apply_filters( 'cloudinary_default_crop', 'fill' ) );
+			return apply_filters( 'cloudinary_default_soft_crop', apply_filters( 'cloudinary_default_crop', $core->_default_soft_crop ) );
 		}
 	}
 }

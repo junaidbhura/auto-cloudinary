@@ -55,6 +55,8 @@ class Admin {
 		) {
 			update_option( 'cloudinary_cloud_name', sanitize_text_field( $_POST['cloudinary_cloud_name'] ) );
 			update_option( 'cloudinary_auto_mapping_folder', sanitize_text_field( $_POST['cloudinary_auto_mapping_folder'] ) );
+			update_option( 'cloudinary_default_hard_crop', sanitize_text_field( $_POST['cloudinary_default_hard_crop'] ) );
+			update_option( 'cloudinary_default_soft_crop', sanitize_text_field( $_POST['cloudinary_default_soft_crop'] ) );
 			$urls = trim( sanitize_textarea_field( $_POST['cloudinary_urls'] ) );
 			if ( empty( $urls ) ) {
 				$urls = 'https://res.cloudinary.com';
