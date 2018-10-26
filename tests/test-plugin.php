@@ -29,6 +29,8 @@ class JB_Test_Cloudinary_Plugin extends WP_UnitTestCase {
 		self::$_image_id      = self::upload_image();
 		self::$_attached_file = get_attached_file( self::$_image_id );
 
+		update_option( 'cloudinary_default_hard_crop', 'fill' );
+		update_option( 'cloudinary_default_soft_crop', 'fit' );
 		update_option( 'cloudinary_content_images', '1' );
 		JB\Cloudinary\bootstrap();
 	}
@@ -161,7 +163,7 @@ class JB_Test_Cloudinary_Plugin extends WP_UnitTestCase {
 	function test_update_content_images() {
 		cloudinary_ignore_start();
 		$content         = 'Test content. ' . get_image_tag( self::$_image_id, '', '', 'none', 'full' );
-		$updated_content = str_replace( self::$_upload_dir['baseurl'], 'https://res-1.cloudinary.com/test-cloud/w_1920,h_1080,c_fill/test-auto-folder', $content );
+		$updated_content = str_replace( self::$_upload_dir['baseurl'], 'https://res-1.cloudinary.com/test-cloud/w_1920,h_1080,c_fit/test-auto-folder', $content );
 		cloudinary_ignore_end();
 
 		$this->assertEquals( cloudinary_update_content_images( $content ), $updated_content, 'Content image incorrect.' );
@@ -174,22 +176,22 @@ class JB_Test_Cloudinary_Plugin extends WP_UnitTestCase {
 	function test_image_srcset() {
 		$image_path    = $this->get_image_path();
 		$srcset_full   = array(
-			'https://res-3.cloudinary.com/test-cloud/w_1920,c_fill/test-auto-folder' . $image_path . ' 1920w',
-			'https://res-1.cloudinary.com/test-cloud/w_300,h_169,c_fill/test-auto-folder' . $image_path . ' 300w',
-			'https://res-2.cloudinary.com/test-cloud/w_768,h_432,c_fill/test-auto-folder' . $image_path . ' 768w',
-			'https://res-3.cloudinary.com/test-cloud/w_1024,h_576,c_fill/test-auto-folder' . $image_path . ' 1024w',
+			'https://res-3.cloudinary.com/test-cloud/w_1920,c_fit/test-auto-folder' . $image_path . ' 1920w',
+			'https://res-1.cloudinary.com/test-cloud/w_300,h_169,c_fit/test-auto-folder' . $image_path . ' 300w',
+			'https://res-2.cloudinary.com/test-cloud/w_768,h_432,c_fit/test-auto-folder' . $image_path . ' 768w',
+			'https://res-3.cloudinary.com/test-cloud/w_1024,h_576,c_fit/test-auto-folder' . $image_path . ' 1024w',
 		);
 		$srcset_large  = array(
-			'https://res-2.cloudinary.com/test-cloud/w_1920,c_fill/test-auto-folder' . $image_path . ' 1920w',
-			'https://res-3.cloudinary.com/test-cloud/w_300,h_169,c_fill/test-auto-folder' . $image_path . ' 300w',
-			'https://res-1.cloudinary.com/test-cloud/w_768,h_432,c_fill/test-auto-folder' . $image_path . ' 768w',
-			'https://res-2.cloudinary.com/test-cloud/w_1024,h_576,c_fill/test-auto-folder' . $image_path . ' 1024w',
+			'https://res-2.cloudinary.com/test-cloud/w_1920,c_fit/test-auto-folder' . $image_path . ' 1920w',
+			'https://res-3.cloudinary.com/test-cloud/w_300,h_169,c_fit/test-auto-folder' . $image_path . ' 300w',
+			'https://res-1.cloudinary.com/test-cloud/w_768,h_432,c_fit/test-auto-folder' . $image_path . ' 768w',
+			'https://res-2.cloudinary.com/test-cloud/w_1024,h_576,c_fit/test-auto-folder' . $image_path . ' 1024w',
 		);
 		$srcset_medium = array(
-			'https://res-1.cloudinary.com/test-cloud/w_1920,c_fill/test-auto-folder' . $image_path . ' 1920w',
-			'https://res-2.cloudinary.com/test-cloud/w_300,h_169,c_fill/test-auto-folder' . $image_path . ' 300w',
-			'https://res-3.cloudinary.com/test-cloud/w_768,h_432,c_fill/test-auto-folder' . $image_path . ' 768w',
-			'https://res-1.cloudinary.com/test-cloud/w_1024,h_576,c_fill/test-auto-folder' . $image_path . ' 1024w',
+			'https://res-1.cloudinary.com/test-cloud/w_1920,c_fit/test-auto-folder' . $image_path . ' 1920w',
+			'https://res-2.cloudinary.com/test-cloud/w_300,h_169,c_fit/test-auto-folder' . $image_path . ' 300w',
+			'https://res-3.cloudinary.com/test-cloud/w_768,h_432,c_fit/test-auto-folder' . $image_path . ' 768w',
+			'https://res-1.cloudinary.com/test-cloud/w_1024,h_576,c_fit/test-auto-folder' . $image_path . ' 1024w',
 		);
 
 		$this->assertEquals( wp_get_attachment_image_srcset( self::$_image_id, 'full' ), implode( ', ', $srcset_full ) );
@@ -205,13 +207,13 @@ class JB_Test_Cloudinary_Plugin extends WP_UnitTestCase {
 		$this->assertEquals( $src[0], 'https://res-2.cloudinary.com/test-cloud/test-auto-folder' . $this->get_image_path(), 'Incorrect SRC.' );
 
 		$src = wp_get_attachment_image_src( self::$_image_id, 'large' );
-		$this->assertEquals( $src[0], 'https://res-3.cloudinary.com/test-cloud/w_1024,h_576,c_fill/test-auto-folder' . $this->get_image_path(), 'Incorrect SRC.' );
+		$this->assertEquals( $src[0], 'https://res-3.cloudinary.com/test-cloud/w_1024,h_576,c_fit/test-auto-folder' . $this->get_image_path(), 'Incorrect SRC.' );
 
 		$src = wp_get_attachment_image_src( self::$_image_id, 'medium' );
-		$this->assertEquals( $src[0], 'https://res-1.cloudinary.com/test-cloud/w_300,h_169,c_fill/test-auto-folder' . $this->get_image_path(), 'Incorrect SRC.' );
+		$this->assertEquals( $src[0], 'https://res-1.cloudinary.com/test-cloud/w_300,h_169,c_fit/test-auto-folder' . $this->get_image_path(), 'Incorrect SRC.' );
 
 		$src = wp_get_attachment_image_src( self::$_image_id, array( 100, 100 ) );
-		$this->assertEquals( $src[0], 'https://res-2.cloudinary.com/test-cloud/w_100,h_100,c_fill/test-auto-folder' . $this->get_image_path(), 'Incorrect SRC.' );
+		$this->assertEquals( $src[0], 'https://res-2.cloudinary.com/test-cloud/w_100,h_100,c_fit/test-auto-folder' . $this->get_image_path(), 'Incorrect SRC.' );
 	}
 
 	/**
@@ -220,7 +222,7 @@ class JB_Test_Cloudinary_Plugin extends WP_UnitTestCase {
 	function test_wp_get_attachment_image() {
 		$image_path = $this->get_image_path();
 
-		$test_string = '<img width="1920" height="1080" src="https://res-3.cloudinary.com/test-cloud/test-auto-folder' . $image_path . '" class="attachment-full size-full" alt="Test Alt" title="Test Title" srcset="https://res-1.cloudinary.com/test-cloud/w_1920,c_fill/test-auto-folder' . $image_path . ' 1920w, https://res-2.cloudinary.com/test-cloud/w_300,h_169,c_fill/test-auto-folder' . $image_path . ' 300w, https://res-3.cloudinary.com/test-cloud/w_768,h_432,c_fill/test-auto-folder' . $image_path . ' 768w, https://res-1.cloudinary.com/test-cloud/w_1024,h_576,c_fill/test-auto-folder' . $image_path . ' 1024w" sizes="(max-width: 1920px) 100vw, 1920px" />';
+		$test_string = '<img width="1920" height="1080" src="https://res-3.cloudinary.com/test-cloud/test-auto-folder' . $image_path . '" class="attachment-full size-full" alt="Test Alt" title="Test Title" srcset="https://res-1.cloudinary.com/test-cloud/w_1920,c_fit/test-auto-folder' . $image_path . ' 1920w, https://res-2.cloudinary.com/test-cloud/w_300,h_169,c_fit/test-auto-folder' . $image_path . ' 300w, https://res-3.cloudinary.com/test-cloud/w_768,h_432,c_fit/test-auto-folder' . $image_path . ' 768w, https://res-1.cloudinary.com/test-cloud/w_1024,h_576,c_fit/test-auto-folder' . $image_path . ' 1024w" sizes="(max-width: 1920px) 100vw, 1920px" />';
 		$this->assertEquals(
 			wp_get_attachment_image( self::$_image_id, 'full', false, array(
 				'alt'   => 'Test Alt',
@@ -230,14 +232,14 @@ class JB_Test_Cloudinary_Plugin extends WP_UnitTestCase {
 			'Incorrect attachment image.'
 		);
 
-		$test_string = '<img width="300" height="169" src="https://res-2.cloudinary.com/test-cloud/w_300,h_169,c_fill/test-auto-folder' . $image_path . '" class="attachment-medium size-medium" alt="" srcset="https://res-3.cloudinary.com/test-cloud/w_1920,c_fill/test-auto-folder' . $image_path . ' 1920w, https://res-1.cloudinary.com/test-cloud/w_300,h_169,c_fill/test-auto-folder' . $image_path . ' 300w, https://res-2.cloudinary.com/test-cloud/w_768,h_432,c_fill/test-auto-folder' . $image_path . ' 768w, https://res-3.cloudinary.com/test-cloud/w_1024,h_576,c_fill/test-auto-folder' . $image_path . ' 1024w" sizes="(max-width: 300px) 100vw, 300px" />';
+		$test_string = '<img width="300" height="169" src="https://res-2.cloudinary.com/test-cloud/w_300,h_169,c_fit/test-auto-folder' . $image_path . '" class="attachment-medium size-medium" alt="" srcset="https://res-3.cloudinary.com/test-cloud/w_1920,c_fit/test-auto-folder' . $image_path . ' 1920w, https://res-1.cloudinary.com/test-cloud/w_300,h_169,c_fit/test-auto-folder' . $image_path . ' 300w, https://res-2.cloudinary.com/test-cloud/w_768,h_432,c_fit/test-auto-folder' . $image_path . ' 768w, https://res-3.cloudinary.com/test-cloud/w_1024,h_576,c_fit/test-auto-folder' . $image_path . ' 1024w" sizes="(max-width: 300px) 100vw, 300px" />';
 		$this->assertEquals(
 			wp_get_attachment_image( self::$_image_id, 'medium' ),
 			$test_string,
 			'Incorrect attachment image.'
 		);
 
-		$test_string = '<img width="1024" height="576" src="https://res-1.cloudinary.com/test-cloud/w_1024,h_576,c_fill/test-auto-folder' . $image_path . '" class="attachment-large size-large" alt="" srcset="https://res-2.cloudinary.com/test-cloud/w_1920,c_fill/test-auto-folder' . $image_path . ' 1920w, https://res-3.cloudinary.com/test-cloud/w_300,h_169,c_fill/test-auto-folder' . $image_path . ' 300w, https://res-1.cloudinary.com/test-cloud/w_768,h_432,c_fill/test-auto-folder' . $image_path . ' 768w, https://res-2.cloudinary.com/test-cloud/w_1024,h_576,c_fill/test-auto-folder' . $image_path . ' 1024w" sizes="(max-width: 1024px) 100vw, 1024px" />';
+		$test_string = '<img width="1024" height="576" src="https://res-1.cloudinary.com/test-cloud/w_1024,h_576,c_fit/test-auto-folder' . $image_path . '" class="attachment-large size-large" alt="" srcset="https://res-2.cloudinary.com/test-cloud/w_1920,c_fit/test-auto-folder' . $image_path . ' 1920w, https://res-3.cloudinary.com/test-cloud/w_300,h_169,c_fit/test-auto-folder' . $image_path . ' 300w, https://res-1.cloudinary.com/test-cloud/w_768,h_432,c_fit/test-auto-folder' . $image_path . ' 768w, https://res-2.cloudinary.com/test-cloud/w_1024,h_576,c_fit/test-auto-folder' . $image_path . ' 1024w" sizes="(max-width: 1024px) 100vw, 1024px" />';
 		$this->assertEquals(
 			wp_get_attachment_image( self::$_image_id, 'large' ),
 			$test_string,
@@ -246,11 +248,22 @@ class JB_Test_Cloudinary_Plugin extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Test default crop.
+	 *
+	 * @covers cloudinary_default_crop()
+	 */
+	function test_default_crop() {
+		$this->assertEquals( cloudinary_default_crop(), 'fit', 'Incorrect default crop.' );
+		$this->assertEquals( cloudinary_default_crop( false ), 'fit', 'Incorrect default crop.' );
+		$this->assertEquals( cloudinary_default_crop( true ), 'fill', 'Incorrect default crop.' );
+	}
+
+	/**
 	 * Test filters.
 	 */
 	function test_filters() {
 		$src = wp_get_attachment_image_src( self::$_image_id, 'large' );
-		$this->assertEquals( $src[0], 'https://res-3.cloudinary.com/test-cloud/w_1024,h_576,c_fill/test-auto-folder' . $this->get_image_path(), 'Incorrect SRC.' );
+		$this->assertEquals( $src[0], 'https://res-3.cloudinary.com/test-cloud/w_1024,h_576,c_fit/test-auto-folder' . $this->get_image_path(), 'Incorrect SRC.' );
 
 		add_filter( 'cloudinary_default_args', function( $args ) {
 			return array(
