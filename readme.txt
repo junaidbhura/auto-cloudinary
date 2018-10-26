@@ -142,6 +142,7 @@ Activate the plugin through the 'Plugins' menu in WordPress.
 
 = 1.1.0 =
 * Added default crop options to the WP Admin [#10](https://github.com/junaidbhura/auto-cloudinary/issues/10)
+* Full release details: [https://github.com/junaidbhura/auto-cloudinary/releases/tag/1.1.0](https://github.com/junaidbhura/auto-cloudinary/releases/tag/1.1.0)
 
 = 1.0.3 =
 * New filters for default hard and soft crops [#2](https://github.com/junaidbhura/auto-cloudinary/issues/2). Props [@petersplugins](https://github.com/petersplugins)
