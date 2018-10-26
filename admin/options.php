@@ -19,6 +19,36 @@
 						</td>
 					</tr>
 					<tr>
+						<th scope="row"><label for="cloudinary_default_hard_crop"><?php esc_html_e( 'Default Hard Crop', 'cloudinary' ); ?></label></th>
+						<td>
+							<select name="cloudinary_default_hard_crop" id="cloudinary_default_hard_crop">
+								<option value="fill"
+									<?php if ( 'fill' === get_option( 'cloudinary_default_hard_crop' ) ) : ?>
+										selected="selected"
+									<?php endif; ?>>fill</option>
+								<option value="fit"
+									<?php if ( 'fit' === get_option( 'cloudinary_default_hard_crop' ) ) : ?>
+										selected="selected"
+									<?php endif; ?>>fit</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><label for="cloudinary_default_soft_crop"><?php esc_html_e( 'Default Soft Crop', 'cloudinary' ); ?></label></th>
+						<td>
+							<select name="cloudinary_default_soft_crop" id="cloudinary_default_soft_crop">
+								<option value="fit"
+									<?php if ( 'fit' === get_option( 'cloudinary_default_soft_crop' ) ) : ?>
+										selected="selected"
+									<?php endif; ?>>fit</option>
+								<option value="fill"
+									<?php if ( 'fill' === get_option( 'cloudinary_default_soft_crop' ) ) : ?>
+										selected="selected"
+									<?php endif; ?>>fill</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
 						<th scope="row"><label for="cloudinary_urls"><?php esc_html_e( 'URLs', 'cloudinary' ); ?></label></th>
 						<td>
 							<textarea name="cloudinary_urls" id="cloudinary_urls" class="large-text" style="height: 100px;"><?php echo ! empty( get_option( 'cloudinary_urls' ) ) ? esc_html( get_option( 'cloudinary_urls' ) ) : 'https://res.cloudinary.com'; ?></textarea>

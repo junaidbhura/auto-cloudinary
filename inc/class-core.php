@@ -8,6 +8,8 @@ class Core {
 	public $_setup               = false;
 	public $_cloud_name          = '';
 	public $_auto_mapping_folder = '';
+	public $_default_hard_crop   = '';
+	public $_default_soft_crop   = '';
 	public $_options             = array();
 	public $_urls                = array();
 	private $_url_counter        = 0;
@@ -32,12 +34,21 @@ class Core {
 	public function setup() {
 		$this->_cloud_name            = apply_filters( 'cloudinary_cloud_name', get_option( 'cloudinary_cloud_name' ) );
 		$this->_auto_mapping_folder   = apply_filters( 'cloudinary_auto_mapping_folder', get_option( 'cloudinary_auto_mapping_folder' ) );
+		$this->_default_hard_crop     = get_option( 'cloudinary_default_hard_crop' );
+		$this->_default_soft_crop     = get_option( 'cloudinary_default_soft_crop' );
 		$this->_options['urls']       = get_option( 'cloudinary_urls' );
 		$upload_dir                   = wp_upload_dir();
 		$this->_options['upload_url'] = apply_filters( 'cloudinary_upload_url', $upload_dir['baseurl'] );
 
 		if ( ! empty( $this->_cloud_name ) && ! empty( $this->_auto_mapping_folder ) ) {
 			$this->_setup = true;
+		}
+
+		if ( empty( $this->_default_hard_crop ) ) {
+			$this->_default_hard_crop = 'fill';
+		}
+		if ( empty( $this->_default_soft_crop ) ) {
+			$this->_default_soft_crop = 'fit';
 		}
 	}
 
