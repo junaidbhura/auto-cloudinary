@@ -44,11 +44,15 @@ class Core {
 			$this->_setup = true;
 		}
 
+		/**
+		 * Users before 1.1.0 might not have updated their options.
+		 * This is to support them.
+		 */
 		if ( empty( $this->_default_hard_crop ) ) {
-			$this->_default_hard_crop = 'fill';
+			$this->_default_hard_crop = apply_filters( 'cloudinary_default_hard_crop', apply_filters( 'cloudinary_default_crop', 'fill' ) );
 		}
 		if ( empty( $this->_default_soft_crop ) ) {
-			$this->_default_soft_crop = 'fit';
+			$this->_default_soft_crop = apply_filters( 'cloudinary_default_hard_crop', apply_filters( 'cloudinary_default_crop', 'fill' ) );
 		}
 	}
 
