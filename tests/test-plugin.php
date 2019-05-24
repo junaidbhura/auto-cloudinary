@@ -421,7 +421,7 @@ class JB_Test_Cloudinary_Plugin extends WP_UnitTestCase {
 
 		add_filter( 'cloudinary_allow_rest_api_call', '__return_true' );
 		$response = rest_do_request( $request );
-		$this->assertEquals( $response->data[0]['media_details']['sizes']['full']['source_url'], 'https://res-2.cloudinary.com/test-cloud/test-auto-folder' . $this->get_image_path() );
+		$this->assertEquals( $response->data[0]['media_details']['sizes']['full']['source_url'], 'https://res-1.cloudinary.com/test-cloud/test-auto-folder' . $this->get_image_path() );
 	}
 
 }
