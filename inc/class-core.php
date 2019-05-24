@@ -221,12 +221,23 @@ class Core {
 			'prefix'               => 'p',
 			'page'                 => 'pg',
 			'video_sampling'       => 'vs',
+			'progressive'          => 'fl_progressive',
 		);
 
 		$slug = array();
 		foreach ( $args as $key => $value ) {
 			if ( array_key_exists( $key, $cloudinary_params ) && $this->valid_value( $cloudinary_params[ $key ], $value ) ) {
-				$slug[] = $cloudinary_params[ $key ] . '_' . $value;
+				switch ( $key ) {
+					case 'progressive':
+						if ( true === $value ) {
+							$slug[] = $cloudinary_params[ $key ];
+						} else {
+							$slug[] = $cloudinary_params[ $key ] . ':' . $value;
+						}
+						break;
+					default:
+						$slug[] = $cloudinary_params[ $key ] . '_' . $value;
+				}
 			}
 		}
 		return implode( ',', $slug );
