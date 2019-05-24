@@ -88,13 +88,13 @@ class Core {
 		}
 
 		// Default args.
-		$default_args = apply_filters( 'cloudinary_default_args', array(), $identifier, $args, $original_url );
+		$default_args = apply_filters( 'cloudinary_default_args', array() );
 		if ( ! empty( $default_args ) ) {
 			$args = array_replace_recursive( $default_args, $args );
 		}
 
 		// Filter args.
-		$args = apply_filters( 'cloudinary_args', $args, $identifier, $original_url );
+		$args = apply_filters( 'cloudinary_args', $args, $identifier );
 
 		// Start building the URL.
 		$url = $this->get_domain() . '/' . $this->_cloud_name;
@@ -122,7 +122,7 @@ class Core {
 		}
 
 		// All done, let's return it.
-		return apply_filters( 'cloudinary_url', $url, $identifier, $args, $original_url );
+		return apply_filters( 'cloudinary_url', $url, $identifier, $args );
 	}
 
 	/**
