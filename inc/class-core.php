@@ -87,6 +87,15 @@ class Core {
 			return $original_url;
 		}
 
+		// Check if we need to ignore REST API calls.
+		$allow_rest_call = apply_filters( 'cloudinary_allow_rest_api_call', false );
+		if ( ! $allow_rest_call ) {
+			global $wp_rest_server;
+			if ( null !== $wp_rest_server ) {
+				return $original_url;
+			}
+		}
+
 		// Default args.
 		$default_args = apply_filters( 'cloudinary_default_args', array() );
 		if ( ! empty( $default_args ) ) {

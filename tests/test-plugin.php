@@ -409,4 +409,19 @@ class JB_Test_Cloudinary_Plugin extends WP_UnitTestCase {
 		);
 	}
 
+	/**
+	 * Test REST API call.
+	 */
+	function test_rest_api_call() {
+		$request = new WP_REST_Request( 'GET', '/wp/v2/media' );
+		$request->set_param( 'include', self::$_image_id );
+
+		$response = rest_do_request( $request );
+		$this->assertEquals( $response->data[0]['media_details']['sizes']['full']['source_url'], 'http://example.org/wp-content/uploads' . $this->get_image_path() );
+
+		add_filter( 'cloudinary_allow_rest_api_call', '__return_true' );
+		$response = rest_do_request( $request );
+		$this->assertEquals( $response->data[0]['media_details']['sizes']['full']['source_url'], 'https://res-1.cloudinary.com/test-cloud/test-auto-folder' . $this->get_image_path() );
+	}
+
 }
