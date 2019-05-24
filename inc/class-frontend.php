@@ -188,7 +188,7 @@ class Frontend {
 		global $_wp_additional_image_sizes;
 
 		foreach ( get_intermediate_image_sizes() as $_size ) {
-			if ( in_array( $_size, array( 'thumbnail', 'medium', 'medium_large', 'large' ) ) ) {
+			if ( in_array( $_size, array( 'thumbnail', 'medium', 'medium_large', 'large' ), true ) ) {
 				$this->_sizes[ $_size ]['width']  = get_option( "{$_size}_size_w" );
 				$this->_sizes[ $_size ]['height'] = get_option( "{$_size}_size_h" );
 				$this->_sizes[ $_size ]['crop']   = (bool) get_option( "{$_size}_crop" );
