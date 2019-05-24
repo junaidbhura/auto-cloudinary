@@ -88,13 +88,13 @@ class Core {
 		}
 
 		// Default args.
-		$default_args = apply_filters( 'cloudinary_default_args', array() );
+		$default_args = apply_filters( 'cloudinary_default_args', array(), $identifier, $args, $original_url );
 		if ( ! empty( $default_args ) ) {
 			$args = array_replace_recursive( $default_args, $args );
 		}
 
 		// Filter args.
-		$args = apply_filters( 'cloudinary_args', $args, $identifier );
+		$args = apply_filters( 'cloudinary_args', $args, $identifier, $original_url );
 
 		// Start building the URL.
 		$url = $this->get_domain() . '/' . $this->_cloud_name;
@@ -122,7 +122,7 @@ class Core {
 		}
 
 		// All done, let's return it.
-		return apply_filters( 'cloudinary_url', $url, $identifier, $args );
+		return apply_filters( 'cloudinary_url', $url, $identifier, $args, $original_url );
 	}
 
 	/**
@@ -221,12 +221,23 @@ class Core {
 			'prefix'               => 'p',
 			'page'                 => 'pg',
 			'video_sampling'       => 'vs',
+			'progressive'          => 'fl_progressive',
 		);
 
 		$slug = array();
 		foreach ( $args as $key => $value ) {
 			if ( array_key_exists( $key, $cloudinary_params ) && $this->valid_value( $cloudinary_params[ $key ], $value ) ) {
-				$slug[] = $cloudinary_params[ $key ] . '_' . $value;
+				switch ( $key ) {
+					case 'progressive':
+						if ( true === $value ) {
+							$slug[] = $cloudinary_params[ $key ];
+						} else {
+							$slug[] = $cloudinary_params[ $key ] . ':' . $value;
+						}
+						break;
+					default:
+						$slug[] = $cloudinary_params[ $key ] . '_' . $value;
+				}
 			}
 		}
 		return implode( ',', $slug );
