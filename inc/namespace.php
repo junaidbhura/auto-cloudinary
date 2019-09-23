@@ -42,9 +42,7 @@ function autoload( $class = '' ) {
  * @return void
  */
 function bootstrap() {
-	$doing_ajax = defined( 'DOING_AJAX' ) && DOING_AJAX; // wp_doing_ajax() is only available from WP 4.7
-
-	if ( ! $doing_ajax && is_admin() ) {
+	if ( is_admin() ) {
 		// Admin stuff.
 		Admin::get_instance()->setup();
 	} else {
