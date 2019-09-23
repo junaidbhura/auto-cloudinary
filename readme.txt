@@ -140,6 +140,9 @@ Activate the plugin through the 'Plugins' menu in WordPress.
 
 == Changelog ==
 
+= 1.2.1 =
+* Fix images sizes in block editor [#25](https://github.com/junaidbhura/auto-cloudinary/issues/25)
+
 = 1.2.0 =
 * Turn off Cloudinary URLs for REST API calls [#18](https://github.com/junaidbhura/auto-cloudinary/issues/18)
 * Added progressive image loading parameter [#20](https://github.com/junaidbhura/auto-cloudinary/issues/20)
