@@ -42,12 +42,20 @@ function autoload( $class = '' ) {
  * @return void
  */
 function bootstrap() {
-	if ( is_admin() ) {
-		// Admin stuff.
-		Admin::get_instance()->setup();
-	} else {
-		// Front-end stuff.
-		Core::get_instance()->setup();
-		Frontend::get_instance()->setup();
-	}
+	// Admin stuff.
+	add_action(
+		'admin_init',
+		function () {
+			Admin::get_instance()->setup();
+		}
+	);
+
+	// Front-end stuff.
+	add_action(
+		'template_redirect',
+		function () {
+			Core::get_instance()->setup();
+			Frontend::get_instance()->setup();
+		}
+	);
 }
