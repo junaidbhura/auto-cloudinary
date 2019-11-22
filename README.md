@@ -1,6 +1,6 @@
 # Cloudinary Auto-Upload for WordPress
 
-[![CircleCI](https://circleci.com/gh/junaidbhura/auto-cloudinary.svg?style=svg)](https://circleci.com/gh/junaidbhura/auto-cloudinary)
+[![GitHub Actions](https://github.com/junaidbhura/auto-cloudinary/workflows/Coding%20Standards%20and%20Tests/badge.svg)
 
 [Download the WP Plugin ♥](https://wordpress.org/plugins/auto-cloudinary/)
 

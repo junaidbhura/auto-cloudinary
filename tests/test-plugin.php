@@ -22,6 +22,9 @@ class JB_Test_Cloudinary_Plugin extends WP_UnitTestCase {
 		update_option( 'large_size_h', 576 );
 		update_option( 'medium_size_w', 300 );
 		update_option( 'medium_size_h', 169 );
+		update_option( 'thumbnail_size_w', 150 );
+		update_option( 'thumbnail_size_h', 150 );
+		set_post_thumbnail_size( 0, 0 );
 
 		add_image_size( 'different_aspect_ratio', 400, 200, true );
 
