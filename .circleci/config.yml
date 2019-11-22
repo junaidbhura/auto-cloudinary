@@ -2,7 +2,7 @@ version: 2
 jobs:
   coding_standards_and_tests:
     docker:
-      - image: php:7.2-fpm-stretch
+      - image: circleci/php:7.2-apache-stretch
         environment:
           MYSQL_HOST=127.0.0.1
           MYSQL_PORT=3306
