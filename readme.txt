@@ -4,7 +4,7 @@ Tags: cloudinary, dynamic-images, cdn, image-optimization, image-manipulation
 Requires at least: 4.4
 Tested up to: 5.3
 Requires PHP: 5.6
-Stable tag: 1.2.1
+Stable tag: 1.2.2
 
 Super simple Cloudinary auto-upload implementation for WordPress.
 
@@ -139,6 +139,9 @@ Activate the plugin through the 'Plugins' menu in WordPress.
 3. Cloudinary Auto Upload Setup
 
 == Changelog ==
+
+= 1.2.2 =
+* Re-opened and fixed "Fix images sizes in block editor" [#25](https://github.com/junaidbhura/auto-cloudinary/issues/25)
 
 = 1.2.1 =
 * Fix images sizes in block editor [#25](https://github.com/junaidbhura/auto-cloudinary/issues/25)

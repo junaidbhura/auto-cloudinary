@@ -2,9 +2,9 @@
 /*
 Plugin Name: Auto Cloudinary
 Description: Super simple Cloudinary auto-upload implementation for WordPress.
-Version: 1.2.1
+Version: 1.2.2
 Author: Junaid Bhura
-Author URI: https://junaidbhura.com
+Author URI: https://junaid.dev
 Text Domain: cloudinary
 */
 
