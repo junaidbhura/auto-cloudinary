@@ -1,6 +1,6 @@
 # Cloudinary Auto-Upload for WordPress
 
-<a href="https://travis-ci.org/junaidbhura/auto-cloudinary" target="_blank"><img src="https://api.travis-ci.org/junaidbhura/auto-cloudinary.svg?branch=master" alt="Build status"></a>
+[![CircleCI](https://circleci.com/gh/junaidbhura/auto-cloudinary.svg?style=svg)](https://circleci.com/gh/junaidbhura/auto-cloudinary)
 
 [Download the WP Plugin ♥](https://wordpress.org/plugins/auto-cloudinary/)
 
