@@ -23,7 +23,7 @@ jobs:
             sudo -E docker-php-ext-install mysqli
       - run:
           name: Install Packages
-          command: sudo apt-get install -y libpng-dev
+          command: sudo apt-get install -y libpng-dev subversion
       - run:
           name: Install PHP Extensions
           command: sudo -E docker-php-ext-install gd
