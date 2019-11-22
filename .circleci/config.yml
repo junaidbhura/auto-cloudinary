@@ -50,9 +50,9 @@ job-references:
 jobs:
   php56-build:
     <<: *php_job
-      docker:
-        - image: circleci/php:5.6
-        - image: *mysql_image
+    docker:
+      - image: circleci/php:5.6
+      - image: *mysql_image
 
   php70-build:
     <<: *php_job
