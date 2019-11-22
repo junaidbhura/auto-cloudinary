@@ -1,0 +1,19 @@
+name: Coding Standards and Tests
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Install dependencies
+      run: |
+        composer global require wp-coding-standards/wpcs
+        $HOME/.composer/vendor/bin/phpcs --config-set installed_paths $HOME/.composer/vendor/wp-coding-standards/wpcs
+        
+    - name: Coding standards
+      run: $HOME/.composer/vendor/bin/phpcs
