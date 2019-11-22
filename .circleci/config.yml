@@ -35,7 +35,7 @@ jobs:
           command: |
             composer global require "phpunit/phpunit=6.1.0"
             composer global require wp-coding-standards/wpcs
-            phpcs --config-set installed_paths $HOME/.composer/vendor/wp-coding-standards/wpcs
+            $HOME/.composer/vendor/bin/phpcs --config-set installed_paths $HOME/.composer/vendor/wp-coding-standards/wpcs
       - save_cache:
           key: cache-{{ checksum ".circleci/config.yml" }}
           paths:
