@@ -9,6 +9,8 @@ jobs:
           MYSQL_USER=root
           MYSQL_PASSWORD=
           MYSQL_ALLOW_EMPTY_PASSWORD=true
+          WP_TESTS_DIR="/tmp/wordpress-tests-lib"
+          WP_CORE_DIR="/tmp/wordpress/"
       - image: circleci/mysql:5.6
     working_directory: ~/repo
     steps:
@@ -19,7 +21,6 @@ jobs:
             sudo apt-get update
             sudo apt-get install -y default-mysql-client
             sudo -E docker-php-ext-install mysqli
-            mysql -u root -h 127.0.0.1 -e "CREATE DATABASE wp_tests"
       - run:
           name: Install Packages
           command: sudo apt-get install -y libpng-dev
@@ -44,7 +45,10 @@ jobs:
           command: $HOME/.composer/vendor/bin/phpcs
       - run:
           name: Unit Tests
-          command: $HOME/.composer/vendor/bin/phpunit
+          command: |
+            rm -rf $WP_TESTS_DIR $WP_CORE_DIR
+            bash bin/install-wp-tests.sh wp_tests root '' 127.0.0.1 latest
+            $HOME/.composer/vendor/bin/phpunit
 workflows:
   version: 2
   test_everything:
