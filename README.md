@@ -12,6 +12,10 @@ Cloudinary will **automatically fetch and serve the images** from your media lib
 
 Easy peasy 😎
 
+### Important
+
+This plugin is **incompatible with the official Cloudinary plugin**. You'd need to disable that plugin before using this one.
+
 ## Quick Links
 
 [Setup](https://github.com/junaidbhura/auto-cloudinary/wiki/Setup) | [Issues](https://github.com/junaidbhura/auto-cloudinary/issues) | [Functions](https://github.com/junaidbhura/auto-cloudinary/wiki/Functions) | [Filters](https://github.com/junaidbhura/auto-cloudinary/wiki/Filters) | [Best Practices](https://github.com/junaidbhura/auto-cloudinary/wiki/Best-Practices)
