@@ -3,7 +3,7 @@
 namespace JB\Cloudinary;
 
 spl_autoload_register( __NAMESPACE__ . '\\autoload' );
-add_action( 'init', __NAMESPACE__ . '\\bootstrap' );
+bootstrap();
 
 /**
  * Autoloader.
@@ -44,7 +44,7 @@ function autoload( $class = '' ) {
 function bootstrap() {
 	// Admin stuff.
 	add_action(
-		'admin_init',
+		'init',
 		function () {
 			Admin::get_instance()->setup();
 		}
