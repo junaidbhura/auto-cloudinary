@@ -38,7 +38,7 @@ jobs:
       uses: actions/cache@v1
       with:
         path: /github/home/wp-tests
-        key: wp-tests-${{ hashFiles( '.github/workflows/main.yml' ) }}
+        key: wp-tests-${{ hashFiles( '.github/workflows/main.yml' ) }}-${{ matrix.wordpress-version }}
 
     - name: Install Composer dependencies
       if: steps.composer-cache.outputs.cache-hit != 'true'
@@ -54,5 +54,5 @@ jobs:
     - name: Coding standards
       run: $HOME/.composer/vendor/bin/phpcs
 
-    - name: Unit tests
+    - name: Tests
       run: $HOME/.composer/vendor/bin/phpunit
