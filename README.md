@@ -14,7 +14,7 @@ Easy peasy 😎
 
 ### Important
 
-This plugin is **incompatible with the official Cloudinary plugin**. You'd need to disable that plugin before using this one.
+This plugin is **incompatible with the official Cloudinary plugin**. You'd need to disable that plugin first before using this one.
 
 ## Quick Links
 
