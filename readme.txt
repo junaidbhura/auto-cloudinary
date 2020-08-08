@@ -2,7 +2,7 @@
 Contributors: junaidbhura
 Tags: cloudinary, dynamic-images, cdn, image-optimization, image-manipulation
 Requires at least: 4.4
-Tested up to: 5.4
+Tested up to: 5.5
 Requires PHP: 5.6
 Stable tag: 1.2.3
 
