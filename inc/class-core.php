@@ -14,6 +14,47 @@ class Core {
 	public $_urls                = array();
 	private $_url_counter        = 0;
 
+	public $cloudinary_params = array(
+		'angle'                => 'a',
+		'aspect_ratio'         => 'ar',
+		'background'           => 'b',
+		'border'               => 'bo',
+		'crop'                 => 'c',
+		'color'                => 'co',
+		'dpr'                  => 'dpr',
+		'duration'             => 'du',
+		'effect'               => 'e',
+		'end_offset'           => 'eo',
+		'flags'                => 'fl',
+		'height'               => 'h',
+		'overlay'              => 'l',
+		'opacity'              => 'o',
+		'quality'              => 'q',
+		'radius'               => 'r',
+		'start_offset'         => 'so',
+		'named_transformation' => 't',
+		'underlay'             => 'u',
+		'video_codec'          => 'vc',
+		'width'                => 'w',
+		'x'                    => 'x',
+		'y'                    => 'y',
+		'zoom'                 => 'z',
+		'audio_codec'          => 'ac',
+		'audio_frequency'      => 'af',
+		'bit_rate'             => 'br',
+		'color_space'          => 'cs',
+		'default_image'        => 'd',
+		'delay'                => 'dl',
+		'density'              => 'dn',
+		'fetch_format'         => 'f',
+		'gravity'              => 'g',
+		'prefix'               => 'p',
+		'page'                 => 'pg',
+		'video_sampling'       => 'vs',
+		'progressive'          => 'fl_progressive',
+		'format'               => 'f',
+	);
+
 	/**
 	 * Get current instance.
 	 *
@@ -37,8 +78,7 @@ class Core {
 		$this->_default_hard_crop     = get_option( 'cloudinary_default_hard_crop' );
 		$this->_default_soft_crop     = get_option( 'cloudinary_default_soft_crop' );
 		$this->_options['urls']       = get_option( 'cloudinary_urls' );
-		$upload_dir                   = wp_upload_dir();
-		$this->_options['upload_url'] = apply_filters( 'cloudinary_upload_url', $upload_dir['baseurl'] );
+		$this->_options['upload_url'] = apply_filters( 'cloudinary_upload_url', WP_CONTENT_URL );
 
 		if ( ! empty( $this->_cloud_name ) && ! empty( $this->_auto_mapping_folder ) ) {
 			$this->_setup = true;
@@ -112,6 +152,14 @@ class Core {
 		if ( ! empty( $args['file_name'] ) ) {
 			$url .= '/images';
 		}
+		
+		$extension = null;
+
+		if ( ! empty( $args['transform']['format'] ) && 'auto' !== $args['transform']['format'] ) {
+			$extension = $args['transform']['format'];
+
+			unset( $args['transform']['format'] );
+		}
 
 		// Transformations.
 		if ( ! empty( $args['transform'] ) ) {
@@ -128,6 +176,10 @@ class Core {
 		if ( ! empty( $args['file_name'] ) ) {
 			$path_info = pathinfo( $url );
 			$url       = str_replace( $path_info['filename'], $path_info['filename'] . '/' . $args['file_name'], $url );
+		}
+
+		if ( ! empty( $extension ) ) {
+			$url = preg_replace( '#^(.*\.).*$#', '$1' . $extension, $url );
 		}
 
 		// All done, let's return it.
@@ -193,59 +245,19 @@ class Core {
 			return '';
 		}
 
-		$cloudinary_params = array(
-			'angle'                => 'a',
-			'aspect_ratio'         => 'ar',
-			'background'           => 'b',
-			'border'               => 'bo',
-			'crop'                 => 'c',
-			'color'                => 'co',
-			'dpr'                  => 'dpr',
-			'duration'             => 'du',
-			'effect'               => 'e',
-			'end_offset'           => 'eo',
-			'flags'                => 'fl',
-			'height'               => 'h',
-			'overlay'              => 'l',
-			'opacity'              => 'o',
-			'quality'              => 'q',
-			'radius'               => 'r',
-			'start_offset'         => 'so',
-			'named_transformation' => 't',
-			'underlay'             => 'u',
-			'video_codec'          => 'vc',
-			'width'                => 'w',
-			'x'                    => 'x',
-			'y'                    => 'y',
-			'zoom'                 => 'z',
-			'audio_codec'          => 'ac',
-			'audio_frequency'      => 'af',
-			'bit_rate'             => 'br',
-			'color_space'          => 'cs',
-			'default_image'        => 'd',
-			'delay'                => 'dl',
-			'density'              => 'dn',
-			'fetch_format'         => 'f',
-			'gravity'              => 'g',
-			'prefix'               => 'p',
-			'page'                 => 'pg',
-			'video_sampling'       => 'vs',
-			'progressive'          => 'fl_progressive',
-		);
-
 		$slug = array();
 		foreach ( $args as $key => $value ) {
-			if ( array_key_exists( $key, $cloudinary_params ) && $this->valid_value( $cloudinary_params[ $key ], $value ) ) {
+			if ( array_key_exists( $key, $this->cloudinary_params ) && $this->valid_value( $this->cloudinary_params[ $key ], $value ) ) {
 				switch ( $key ) {
 					case 'progressive':
 						if ( true === $value ) {
-							$slug[] = $cloudinary_params[ $key ];
+							$slug[] = $this->cloudinary_params[ $key ];
 						} else {
-							$slug[] = $cloudinary_params[ $key ] . ':' . $value;
+							$slug[] = $this->cloudinary_params[ $key ] . ':' . $value;
 						}
 						break;
 					default:
-						$slug[] = $cloudinary_params[ $key ] . '_' . $value;
+						$slug[] = $this->cloudinary_params[ $key ] . '_' . $value;
 				}
 			}
 		}
