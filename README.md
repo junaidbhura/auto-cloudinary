@@ -54,7 +54,7 @@ This plugin does two main things:
 1. Provides a simple function `cloudinary_url()` to get a Cloudinary auto-upload URL for any image in your media library, with all the Cloudinary transformations, so you can **dynamically manipulate an image on the fly**.
 1. Attempts to automatically convert all image URLs on the front-end into a Cloudinary auto-upload URL, so you can **use Cloudinary as an image CDN**.
 
-## The magical function 🎩
+## Magical functions 🎩
 
 #### `cloudinary_url( $identifier, $args )`
 
@@ -120,4 +120,33 @@ $url_2 = cloudinary_url( 'https://www.yourwebsite.com/wp-content/uploads/2017/12
 
 <img src="<?php echo esc_url( $url_1 ); ?>" width="300" height="200" alt="">
 <img src="<?php echo esc_url( $url_2 ); ?>" width="100" height="100" alt="">
+```
+
+#### `cloudinary_image( $identifier, $args )`
+
+**Parameters**
+
+* **identifier** (integer/string)(required) : Either the ID of the attachment, or a full image URL.
+* **args** (array)(optional) : Arguments to manipulate the image and/or <img> tag.
+
+**Return Value**
+
+Returns an <img> tag:
+
+```html
+<img loading="lazy" src="...">
+```
+
+#### Examples:
+
+```php
+<?php
+echo cloudinary_image( 123, array(
+	'width'   => 300,
+	'crop'    => 'fill',
+	'atts'    => [
+		'alt'   => 'Image alt',
+		'class' => '...',
+ 	],
+) );
 ```
