@@ -1,20 +1,8 @@
 <?xml version="1.0"?>
-<ruleset name="WordPress Coding Standards for Plugins">
-	<description>Generally-applicable sniffs for WordPress plugins</description>
+<ruleset name="10up PHPCS">
+  <description>10up PHPCS extended.</description>
 
-	<rule ref="WordPress-Core">
-	    <exclude name="PEAR.Functions.FunctionCallSignature.ContentAfterOpenBracket" />
-	    <exclude name="PEAR.Functions.FunctionCallSignature.MultipleArguments" />
-	    <exclude name="PEAR.Functions.FunctionCallSignature.CloseBracketLine" />
-	</rule>
-
-	<!-- Check all PHP files in directory tree by default. -->
-	<arg name="extensions" value="php"/>
-	<file>.</file>
-
-	<!-- Show progress and sniff codes in all reports -->
-	<arg value="ps"/>
-
-	<exclude-pattern>*/node_modules/*</exclude-pattern>
-	<exclude-pattern>*/vendor/*</exclude-pattern>
+  <rule ref="10up-Default">
+    <exclude name="WordPress.WP.GlobalVariablesOverride.Prohibited" />
+  </rule>
 </ruleset>

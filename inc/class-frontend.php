@@ -130,9 +130,12 @@ class Frontend {
 						}
 					}
 
-					$dimensions = array_merge_recursive( $dimensions, array(
-						'crop' => cloudinary_default_crop( $hard_crop ),
-					) );
+					$dimensions = array_merge_recursive(
+						$dimensions,
+						array(
+							'crop' => cloudinary_default_crop( $hard_crop ),
+						)
+					);
 					$transform  = array(
 						'transform' => $dimensions,
 					);

@@ -152,7 +152,7 @@ class Core {
 		if ( ! empty( $args['file_name'] ) ) {
 			$url .= '/images';
 		}
-		
+
 		$extension = null;
 
 		if ( ! empty( $args['transform']['format'] ) && 'auto' !== $args['transform']['format'] ) {
@@ -195,9 +195,12 @@ class Core {
 		// Get our URLs the first time this function is called.
 		if ( empty( $this->_urls ) ) {
 			if ( ! empty( $this->_options['urls'] ) ) {
-				$this->_urls = array_map( function( $url ) {
-					return rtrim( $url, '/' );
-				}, array_map( 'trim', explode( "\n", $this->_options['urls'] ) ) );
+				$this->_urls = array_map(
+					function( $url ) {
+						return rtrim( $url, '/' );
+					},
+					array_map( 'trim', explode( "\n", $this->_options['urls'] ) )
+				);
 			}
 
 			$this->_urls        = apply_filters( 'cloudinary_urls', $this->_urls );
