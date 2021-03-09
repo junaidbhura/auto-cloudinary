@@ -3,8 +3,8 @@ name: Coding Standards and Tests
 on: [ push ]
 
 env:
-  WP_TESTS_DIR: /github/home/wp-tests/wordpress-tests-lib
-  WP_CORE_DIR: /github/home/wp-tests/wordpress
+  WP_TESTS_DIR: /home/runner/wp-tests/wordpress-tests-lib
+  WP_CORE_DIR: /home/runner/wp-tests/wordpress
 
 jobs:
 
@@ -39,14 +39,14 @@ jobs:
       id: composer-cache
       uses: actions/cache@v2
       with:
-        path: /github/home/.composer/vendor
+        path: /home/runner/.composer/vendor
         key: composer-${{ hashFiles( '.github/workflows/main.yml' ) }}
 
     - name: WordPress test suite cache
       id: wp-test-suite
       uses: actions/cache@v2
       with:
-        path: /github/home/wp-tests
+        path: /home/runner/wp-tests
         key: wp-tests-${{ hashFiles( '.github/workflows/main.yml' ) }}-${{ matrix.wordpress-version }}
 
     - name: Install Composer dependencies
