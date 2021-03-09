@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-version: [ '5.6', '7.4', '8.0' ]
+        php-version: [ '5.6', '7.3', '7.4' ]
         wordpress-version: [ latest ]
     services:
       mysql:
@@ -52,7 +52,7 @@ jobs:
     - name: Install Composer dependencies
       if: steps.composer-cache.outputs.cache-hit != 'true'
       run: |
-        composer global require "phpunit/phpunit=9.*"
+        composer global require "phpunit/phpunit=5.7.*"
         composer global require wp-coding-standards/wpcs
         $HOME/.composer/vendor/bin/phpcs --config-set installed_paths $HOME/.composer/vendor/wp-coding-standards/wpcs
 
