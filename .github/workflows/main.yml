@@ -12,10 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-version: [ '5.6', '7.3', '7.4' ]
+        php-version: [ '7.4' ]
         wordpress-version: [ latest ]
-    container:
-      image: junaidbhura/wp-tests:php-${{ matrix.php-version }}
     services:
       mysql:
         image: mysql:5.7.27
@@ -27,6 +25,13 @@ jobs:
         options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=5s --health-retries=3
 
     steps:
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-version }}
+        coverage: none
+        tools: composer, cs2pr
+
     - name: Checkout repository
       uses: actions/checkout@v2
 
