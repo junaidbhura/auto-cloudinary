@@ -12,30 +12,39 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-version: [ 5.6, 7.3, 7.4 ]
+        php-version: [ '5.6', '7.4', '8.0' ]
         wordpress-version: [ latest ]
-    container:
-      image: junaidbhura/wp-tests:php-${{ matrix.php-version }}
     services:
       mysql:
         image: mysql:5.7.27
         env:
           MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: wordpress_test
+        ports:
+          - 3306:3306
+          options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=5s --health-retries=3
 
     steps:
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-version }}
+        coverage: none
+        tools: composer, cs2pr
+
     - name: Checkout repository
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
 
     - name: Composer cache
       id: composer-cache
-      uses: actions/cache@v1
+      uses: actions/cache@v2
       with:
         path: /github/home/.composer/vendor
         key: composer-${{ hashFiles( '.github/workflows/main.yml' ) }}
 
     - name: WordPress test suite cache
       id: wp-test-suite
-      uses: actions/cache@v1
+      uses: actions/cache@v2
       with:
         path: /github/home/wp-tests
         key: wp-tests-${{ hashFiles( '.github/workflows/main.yml' ) }}-${{ matrix.wordpress-version }}
@@ -47,14 +56,8 @@ jobs:
         composer global require wp-coding-standards/wpcs
         $HOME/.composer/vendor/bin/phpcs --config-set installed_paths $HOME/.composer/vendor/wp-coding-standards/wpcs
 
-    - name: Wait for MySQL
-      run: |
-        while ! mysqladmin ping -h mysql -u root -p${MYSQL_ROOT_PASSWORD}; do
-          sleep 1
-        done
-
     - name: Install WordPress test suite
-      run: bash bin/install-wp-tests.sh wordpress_test root root mysql ${{ matrix.wordpress-version }}
+      run: bash bin/install-wp-tests.sh wordpress_test root root mysql ${{ matrix.wordpress-version }} --skip-db-create=true
 
     - name: Coding standards
       run: $HOME/.composer/vendor/bin/phpcs
