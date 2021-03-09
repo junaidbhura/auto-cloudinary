@@ -38,6 +38,9 @@ class JB_Test_Cloudinary_Plugin extends WP_UnitTestCase {
 
 		JB\Cloudinary\Core::get_instance()->setup();
 		JB\Cloudinary\Frontend::get_instance()->setup();
+
+		// Remove theme's filter messing with the results.
+		remove_filter( 'wp_get_attachment_image_attributes', 'twenty_twenty_one_get_attachment_image_attributes', 10 );
 	}
 
 	/**
