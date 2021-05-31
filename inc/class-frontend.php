@@ -77,18 +77,12 @@ class Frontend {
 			// Soft crop dimensions.
 			if ( isset( $dimensions['crop'] ) && false === $dimensions['crop'] ) {
 				$meta = wp_get_attachment_metadata( $id );
-				if ( ! empty( $meta['sizes'][ $size ] ) && ! empty( $meta['sizes'][ $size ]['width'] ) && ! empty( $meta['sizes'][ $size ]['height'] ) ) {
-					// Matching size found.
-					$dimensions = array(
-						'width'  => $meta['sizes'][ $size ]['width'],
-						'height' => $meta['sizes'][ $size ]['height'],
-					);
-				} elseif ( isset( $meta['width'] ) && isset( $meta['height'] ) ) {
-					// Matching size not found, show full width instead.
-					$dimensions = array(
-						'width'  => $meta['width'],
-						'height' => $meta['height'],
-					);
+				if ( isset( $meta['width'] ) && isset( $meta['height'] ) ) {
+					$new_dimensions = wp_constrain_dimensions( $meta['width'], $meta['height'], $dimensions['width'], $dimensions['height'] );
+					if ( ! empty( $new_dimensions ) ) {
+						$dimensions['width']  = $new_dimensions[0];
+						$dimensions['height'] = $new_dimensions[1];
+					}
 				}
 			}
 		}
