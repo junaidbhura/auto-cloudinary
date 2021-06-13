@@ -73,6 +73,18 @@ class Frontend {
 			}
 		} else {
 			$dimensions = $this->get_image_size( $size );
+
+			// Soft crop dimensions.
+			if ( isset( $dimensions['crop'] ) && false === $dimensions['crop'] ) {
+				$meta = wp_get_attachment_metadata( $id );
+				if ( isset( $meta['width'] ) && isset( $meta['height'] ) ) {
+					$new_dimensions = wp_constrain_dimensions( $meta['width'], $meta['height'], $dimensions['width'], $dimensions['height'] );
+					if ( ! empty( $new_dimensions ) ) {
+						$dimensions['width']  = $new_dimensions[0];
+						$dimensions['height'] = $new_dimensions[1];
+					}
+				}
+			}
 		}
 
 		if ( empty( $dimensions ) ) {
