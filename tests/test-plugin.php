@@ -12,7 +12,7 @@ class JB_Test_Cloudinary_Plugin extends WP_UnitTestCase {
 	/**
 	 * Setup.
 	 */
-	static function setUpBeforeClass() {
+	static function setUpBeforeClass(): void {
 		/**
 		 * Set aspect ratio the same as the original image (1920x1080),
 		 * so that wp_image_matches_ratio() doesn't strip them
@@ -46,7 +46,7 @@ class JB_Test_Cloudinary_Plugin extends WP_UnitTestCase {
 	/**
 	 * Tear down.
 	 */
-	static function tearDownAfterClass() {
+	static function tearDownAfterClass(): void {
 		wp_delete_attachment( self::$_image_id, true );
 	}
 
@@ -236,8 +236,9 @@ class JB_Test_Cloudinary_Plugin extends WP_UnitTestCase {
 		$test_string = '<img width="1920" height="1080" src="https://res-3.cloudinary.com/test-cloud/test-auto-folder' . $image_path . '" class="attachment-full size-full" alt="Test Alt" decoding="async" title="Test Title" loading="lazy" srcset="https://res-1.cloudinary.com/test-cloud/w_1920,c_fit/test-auto-folder' . $image_path . ' 1920w, https://res-2.cloudinary.com/test-cloud/w_300,h_169,c_fit/test-auto-folder' . $image_path . ' 300w, https://res-3.cloudinary.com/test-cloud/w_1024,h_576,c_fit/test-auto-folder' . $image_path . ' 1024w, https://res-1.cloudinary.com/test-cloud/w_768,h_432,c_fit/test-auto-folder' . $image_path . ' 768w, https://res-2.cloudinary.com/test-cloud/w_1536,h_864,c_fit/test-auto-folder' . $image_path . ' 1536w" sizes="(max-width: 1920px) 100vw, 1920px" />';
 		$this->assertEquals(
 			wp_get_attachment_image( self::$_image_id, 'full', false, array(
-				'alt'   => 'Test Alt',
-				'title' => 'Test Title',
+				'alt'      => 'Test Alt',
+				'decoding' => 'async',
+				'title'    => 'Test Title',
 			) ),
 			$test_string,
 			'Incorrect attachment image.'
