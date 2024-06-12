@@ -5,9 +5,11 @@
  */
 class JB_Test_Cloudinary_Plugin extends WP_UnitTestCase {
 
-	private static $_upload_dir    = '';
-	private static $_image_id      = 0;
-	private static $_attached_file = null;
+	private static $_upload_dir             = '';
+	private static $_image_id               = 0;
+	private static $_video_id               = 0;
+	private static $_attached_file          = null;
+	private static $_attached_video_file    = null;
 
 	/**
 	 * Setup.
@@ -30,7 +32,9 @@ class JB_Test_Cloudinary_Plugin extends WP_UnitTestCase {
 
 		self::$_upload_dir    = wp_upload_dir();
 		self::$_image_id      = self::upload_image();
+		self::$_video_id      = self::upload_video();
 		self::$_attached_file = get_attached_file( self::$_image_id );
+		self::$_attached_video_file = get_attached_file( self::$_video_id );
 
 		update_option( 'cloudinary_default_hard_crop', 'fill' );
 		update_option( 'cloudinary_default_soft_crop', 'fit' );
@@ -48,6 +52,7 @@ class JB_Test_Cloudinary_Plugin extends WP_UnitTestCase {
 	 */
 	static function tearDownAfterClass(): void {
 		wp_delete_attachment( self::$_image_id, true );
+		wp_delete_attachment( self::$_video_id, true );
 	}
 
 	/**
@@ -79,6 +84,34 @@ class JB_Test_Cloudinary_Plugin extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Upload a video.
+	 *
+	 * @return int|WP_Error
+	 */
+	static function upload_video() {
+		$wp_upload_dir = self::$_upload_dir;
+
+		$file_name = $wp_upload_dir['path'] . DIRECTORY_SEPARATOR . 'video-' . rand_str( 6 ) . '.mp4';
+		$file_type = wp_check_filetype( basename( $file_name ), null );
+		copy( JB_CLOUDINARY_PATH . '/tests/data/video.mp4', $file_name );
+
+		$attachment = array(
+			'guid'           => $wp_upload_dir['url'] . '/' . basename( $file_name ),
+			'post_mime_type' => $file_type['type'],
+			'post_title'     => preg_replace( '/\.[^.]+$/', '', basename( $file_name ) ),
+			'post_content'   => '',
+			'post_status'    => 'inherit',
+		);
+
+		$video_id = wp_insert_attachment( $attachment, $file_name );
+		require_once( ABSPATH . 'wp-admin/includes/image.php' );
+		$attach_data = wp_generate_attachment_metadata( $video_id, $file_name );
+		wp_update_attachment_metadata( $video_id, $attach_data );
+
+		return $video_id;
+	}
+
+	/**
 	 * Get the path to the uploaded image.
 	 *
 	 * @param  string $file_name
@@ -86,6 +119,24 @@ class JB_Test_Cloudinary_Plugin extends WP_UnitTestCase {
 	 */
 	function get_image_path( $file_name = '' ) {
 		$file          = self::$_attached_file;
+		$file_info     = pathinfo( $file );
+		$wp_upload_dir = self::$_upload_dir;
+
+		if ( empty( $file_name ) ) {
+			return $wp_upload_dir['subdir'] . '/' . $file_info['basename'];
+		} else {
+			return $wp_upload_dir['subdir'] . '/' . $file_info['filename'] . '/' . $file_name . '.' . $file_info['extension'];
+		}
+	}
+
+	/**
+	 * Get the path to the uploaded video.
+	 *
+	 * @param  string $file_name
+	 * @return string
+	 */
+	function get_video_path( $file_name = '' ) {
+		$file          = self::$_attached_video_file;
 		$file_info     = pathinfo( $file );
 		$wp_upload_dir = self::$_upload_dir;
 
@@ -163,6 +214,33 @@ class JB_Test_Cloudinary_Plugin extends WP_UnitTestCase {
 
 		$this->assertEquals( cloudinary_url( self::$_image_id, $options_3 ), 'https://res-2.cloudinary.com/test-cloud/images/w_300,h_200,c_fill,q_80,g_face/test-auto-folder' . $image_path_2, 'Incorrect URL.' );
 		$this->assertEquals( cloudinary_url( $original_image_url, $options_3 ), 'https://res-3.cloudinary.com/test-cloud/images/w_300,h_200,c_fill,q_80,g_face/test-auto-folder' . $image_path_2, 'Incorrect URL.' );
+
+		$video_test_file_name     = 'video-test-file-name';
+		$video_path         = $this->get_video_path();
+		$video_path_2       = $this->get_video_path( $video_test_file_name );
+		$original_video_url = cloudinary_get_original_url( self::$_video_id );
+		$options            = array(
+			'transform' => array(
+				'crop'   => 'fit',
+				'height' => 1080,
+				'width'  => 1920,
+			),
+			'file_type' => 'video',
+		);
+		$options_2          = array(
+			'file_name' => $video_test_file_name,
+			'file_type' => 'video',
+		);
+		$options_3          = array_merge( $options, $options_2 );
+
+		$this->assertEquals( cloudinary_url( self::$_video_id, $options ), 'https://res-1.cloudinary.com/test-cloud/video/upload/c_fit,h_1080,w_1920/test-auto-folder' . $video_path, 'Incorrect URL.' );
+		$this->assertEquals( cloudinary_url( $original_video_url, $options ), 'https://res-2.cloudinary.com/test-cloud/video/upload/c_fit,h_1080,w_1920/test-auto-folder' . $video_path, 'Incorrect URL.' );
+
+		$this->assertEquals( cloudinary_url( self::$_video_id, $options_2 ), 'https://res-3.cloudinary.com/test-cloud/video/upload/test-auto-folder' . $video_path_2, 'Incorrect URL.' );
+		$this->assertEquals( cloudinary_url( $original_video_url, $options_2 ), 'https://res-1.cloudinary.com/test-cloud/video/upload/test-auto-folder' . $video_path_2, 'Incorrect URL.' );
+
+		$this->assertEquals( cloudinary_url( self::$_video_id, $options_3 ), 'https://res-2.cloudinary.com/test-cloud/video/upload/c_fit,h_1080,w_1920/test-auto-folder' . $video_path_2, 'Incorrect URL.' );
+		$this->assertEquals( cloudinary_url( $original_video_url, $options_3 ), 'https://res-3.cloudinary.com/test-cloud/video/upload/c_fit,h_1080,w_1920/test-auto-folder' . $video_path_2, 'Incorrect URL.' );
 	}
 
 	/**
