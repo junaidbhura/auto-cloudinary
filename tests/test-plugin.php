@@ -30,10 +30,10 @@ class JB_Test_Cloudinary_Plugin extends WP_UnitTestCase {
 
 		add_image_size( 'different_aspect_ratio', 400, 200, true );
 
-		self::$_upload_dir    = wp_upload_dir();
-		self::$_image_id      = self::upload_image();
-		self::$_video_id      = self::upload_video();
-		self::$_attached_file = get_attached_file( self::$_image_id );
+		self::$_upload_dir          = wp_upload_dir();
+		self::$_image_id            = self::upload_image();
+		self::$_video_id            = self::upload_video();
+		self::$_attached_file       = get_attached_file( self::$_image_id );
 		self::$_attached_video_file = get_attached_file( self::$_video_id );
 
 		update_option( 'cloudinary_default_hard_crop', 'fill' );
