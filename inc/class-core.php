@@ -109,8 +109,13 @@ class Core {
 		$url = $this->get_domain() . '/' . $this->_cloud_name;
 
 		// If file name is present, add the "images" prefix.
-		if ( ! empty( $args['file_name'] ) ) {
+		if ( ! empty( $args['file_name'] ) && ( ! isset( $args['file_type'] ) || 'video' !== $args['file_type'] ) ) {
 			$url .= '/images';
+		}
+
+		// Add support for the video file type.
+		if ( ! empty( $args['file_type'] ) && 'video' === $args['file_type'] ) {
+			$url .= '/video/upload';
 		}
 
 		// Transformations.
