@@ -2,9 +2,9 @@
 Contributors: junaidbhura
 Tags: cloudinary, dynamic-images, cdn, image-optimization, image-manipulation
 Requires at least: 4.4
-Tested up to: 6.3
+Tested up to: 6.6
 Requires PHP: 5.6
-Stable tag: 1.3.0
+Stable tag: 1.3.1
 
 Super simple Cloudinary auto-upload implementation for WordPress.
 
