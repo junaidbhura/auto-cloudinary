@@ -1,5 +1,7 @@
 # Cloudinary Auto-Upload for WordPress
 
+> 🚨 **IMPORTANT:** This package is no longer actively maintained! Please consider switching to: https://github.com/Aysnc-Labs/wordpress-dynamic-media
+
 ![GitHub Actions](https://github.com/junaidbhura/auto-cloudinary/workflows/Coding%20Standards%20and%20Tests/badge.svg)
 
 [Download the WP Plugin ♥](https://wordpress.org/plugins/auto-cloudinary/)
